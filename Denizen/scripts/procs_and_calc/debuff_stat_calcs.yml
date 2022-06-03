@@ -1,0 +1,172 @@
+target_base_mdmg:
+    type: procedure procedure
+    definitions: target
+    script:
+    - choose <[target].flag[Class]>:
+        - case Wizard:
+            - determine <proc[target_total_int].context[<[target]>].div[10].add[<proc[target_total_spr].context[<[target]>].div[10]>].add[<[target].flag[level].div[5]>]>
+        - case Knight:
+            - determine <proc[target_total_int].context[<[target]>].div[15].add[<proc[target_total_spr].context[<[target]>].div[12]>].add[<[target].flag[level].div[10]>].round_down>
+        - case Archer:
+            - determine <proc[target_total_int].context[<[target]>].div[10].add[<proc[target_total_spr].context[<[target]>].div[10]>].add[<[target].flag[level].div[10]>].round_down>
+        - case Divinist:
+            - determine <proc[target_total_int].context[<[target]>].div[12].add[<proc[target_total_spr].context[<[target]>].div[8]>].add[<[target].flag[level].div[8]>].round_down>
+target_bonus_mdmg:
+    type: procedure 
+    definitions: target
+    script:
+        - determine <[target].flag[target_bonus_mdmg]>.add[<[target].flag[temp_mdmg]>]>
+target_total_mdmg:
+    type: procedure 
+    definitions: target
+    script:
+        - if <proc[target_base_mdmg].context[<[target]>].add[<proc[target_bonus_mdmg].context[<[target]>]>]> < 0:
+            - determine 0
+        - else:
+            - determine <proc[target_base_mdmg].context[<[target]>].add[<proc[target_bonus_mdmg].context[<[target]>]>]>
+
+target_base_pdmg:
+    type: procedure 
+    definitions: target
+    script:
+    - choose <[target].flag[Class]>:
+        - case Wizard:
+            - if <proc[target_total_str].context[<[target]>].div[15].add[<proc[target_total_end].context[<[target]>].div[20]>].add[<proc[target_total_dex].context[<[target]>].div[15]>].add[<[target].flag[level].div[7]>]> < 2:
+                - determine 2
+            - else:
+                - determine <proc[target_total_str].context[<[target]>].div[15].add[<proc[target_total_end].context[<[target]>].div[20]>].add[<proc[target_total_dex].context[<[target]>].div[15]>].add[<[target].flag[level].div[7]>]>
+        - case Knight:
+            - if <proc[target_total_str].context[<[target]>].div[15].add[<proc[target_total_end].context[<[target]>].div[20]>].add[<proc[target_total_dex].context[<[target]>].div[15]>].add[<[target].flag[level].div[7]>]> < 2:
+                - determine 2
+            - else:
+                - determine <proc[target_total_str].context[<[target]>].div[15].add[<proc[target_total_end].context[<[target]>].div[20]>].add[<proc[target_total_dex].context[<[target]>].div[15]>].add[<[target].flag[level].div[7]>]>
+        - case Archer:
+            - if <proc[target_total_str].context[<[target]>].div[15].add[<proc[target_total_end].context[<[target]>].div[20]>].add[<proc[target_total_dex].context[<[target]>].div[15]>].add[<[target].flag[level].div[7]>]> < 2:
+                - determine 2
+            - else:
+                - determine <proc[target_total_str].context[<[target]>].div[15].add[<proc[target_total_end].context[<[target]>].div[20]>].add[<proc[target_total_dex].context[<[target]>].div[15]>].add[<[target].flag[level].div[7]>]>
+        - case Divinist:
+            - if <proc[target_total_str].context[<[target]>].div[15].add[<proc[target_total_end].context[<[target]>].div[20]>].add[<proc[target_total_dex].context[<[target]>].div[15]>].add[<[target].flag[level].div[7]>]> < 2:
+                - determine 2
+            - else:
+                - determine <proc[target_total_str].context[<[target]>].div[15].add[<proc[target_total_end].context[<[target]>].div[20]>].add[<proc[target_total_dex].context[<[target]>].div[15]>].add[<[target].flag[level].div[7]>]>
+target_bonus_pdmg:
+    type: procedure 
+    definitions: target
+    script:
+        - determine <[target].flag[bonus_pdmg].add[<[target].flag[temp_pdmg]>]>
+
+target_total_pdmg:
+    type: procedure 
+    definitions: target
+    script:
+        - if <proc[target_base_pdmg].context[<[target]>].add[<proc[target_bonus_pdmg].context[<[target]>]>]> < 0:
+            - determine 0
+        - else:
+            - determine <proc[base_pdmg].context[<[target]>].add[<proc[target_bonus_pdmg].context[<[target]>]>]>
+
+target_base_pdef:
+    type: procedure
+    definitions: target
+    script:
+    - define target <[target]>
+    - choose <[target].flag[Class]>:
+        - case Wizard:
+            - determine <proc[target_total_str].context[<[target]>].div[25].add[<proc[target_total_end].context[<[target]>].div[10]>].add[<proc[target_total_dex].context[<[target]>].div[20]>]>
+        - case Knight:
+            - determine <proc[target_total_str].context[<[target]>].div[25].add[<proc[target_total_end].context[<[target]>].div[10]>].add[<proc[target_total_dex].context[<[target]>].div[20]>]>
+        - case Archer:
+            - determine <proc[target_total_str].context[<[target]>].div[25].add[<proc[target_total_end].context[<[target]>].div[10]>].add[<proc[target_total_dex].context[<[target]>].div[20]>]>
+        - case Divinist:
+            - determine <proc[target_total_str].context[<[target]>].div[25].add[<proc[target_total_end].context[<[target]>].div[10]>].add[<proc[target_total_dex].context[<[target]>].div[20]>]>
+target_bonus_pdef:
+    type: procedure 
+    definitions: target
+    script:
+        - determine <[target].flag[bonus_pdef].add[<[target].flag[temp_pdef]>]>
+target_total_pdef:
+    type: procedure 
+    definitions: target
+    script:
+        - if <proc[target_base_pdef].context[<[target]>].add[<proc[target_bonus_pdef].context[<[target]>]>]> < 0:
+            - determine 0
+        - else:
+            - determine <proc[target_base_pdef].context[<[target]>].add[<proc[target_bonus_pdef].context[<[target]>]>]>
+
+
+target_base_mdef:
+    type: procedure 
+    definitions: target
+    script:
+    - choose <[target].flag[Class]>:
+        - case Wizard:       
+            - determine <proc[target_total_int].context[<[target]>].div[15].add[<proc[target_total_spr].context[<[target]>].div[10]>].add[<proc[target_total_end].context[<[target]>].div[15]>].add[<[target].flag[level].div[10]>]>
+        - case Knight:
+            - determine <proc[target_total_int].context[<[target]>].div[15].add[<proc[target_total_spr].context[<[target]>].div[10]>].add[<proc[target_total_end].context[<[target]>].div[15]>].add[<[target].flag[level].div[10]>]>
+        - case Archer:
+            - determine <proc[target_total_int].context[<[target]>].div[15].add[<proc[target_total_spr].context[<[target]>].div[10]>].add[<proc[target_total_end].context[<[target]>].div[15]>].add[<[target].flag[level].div[10]>]>
+        - case Divinist:
+            - determine <proc[target_total_int].context[<[target]>].div[15].add[<proc[target_total_spr].context[<[target]>].div[10]>].add[<proc[target_total_end].context[<[target]>].div[15]>].add[<[target].flag[level].div[10]>]>
+target_bonus_mdef:
+    type: procedure 
+    definitions: target
+    script:
+        - determine <[target].flag[temp_mdef]>.add[<[target].flag[bonus_mdef]>]>
+target_total_mdef:
+    type: procedure 
+    definitions: target
+    script:
+        - if <proc[target_base_mdef].context[<[target]>].add[<proc[target_bonus_mdef].context[<[target]>]>]> < 0:
+            - determine 0
+        - else:
+            - determine <proc[target_base_mdef].context[<[target]>].add[<proc[target_bonus_mdef].context[<[target]>]>]>
+
+
+target_max_hp:
+    type: procedure 
+    definitions: target
+    script:
+        - choose <[target].flag[class]>:
+            - case Wizard:
+                - determine <proc[target_total_end].context[<[target]>].div[2].add[<[target].flag[level].div[2]>].add[15]>
+            - case Knight:
+                - determine <proc[target_total_end].context[<[target]>].div[2].add[<[target].flag[level].div[2]>].add[15]>
+            - case Archer:
+                - determine <proc[target_total_end].context[<[target]>].div[2].add[<[target].flag[level].div[2]>].add[15]>
+            - case Divinist:
+                 - determine <proc[target_total_end].context[<[target]>].div[2].add[<[target].flag[level].div[2]>].add[15]>
+
+target_max_mp:
+    type: procedure 
+    definitions: target
+    script:
+        - choose <[target].flag[class]>:
+            - case Wizard:
+                - determine <proc[target_total_int].context[<[target]>].div[5].add[<proc[target_total_spr].context[<[target]>].div[8]>].add[<[target].flag[level].div[2]>].add[30]>
+            - case Knight:
+                - determine <proc[target_total_int].context[<[target]>].div[5].add[<proc[target_total_spr].context[<[target]>].div[8]>].add[<[target].flag[level].div[2]>].add[30]>
+            - case Archer:
+                - determine <proc[target_total_int].context[<[target]>].div[5].add[<proc[target_total_spr].context[<[target]>].div[8]>].add[<[target].flag[level].div[2]>].add[30]>
+            - case Divinist:
+                 - determine <proc[target_total_int].context[<[target]>].div[5].add[<proc[target_total_spr].context[<[target]>].div[8]>].add[<[target].flag[level].div[2]>].add[30]>
+
+target_final_pdef:
+    type: procedure 
+    definitions: target
+    script:
+        - determine <proc[target_total_pdef].context[<[target]>].sub[<[target].flag[pdef_debuff]>]>
+target_final_mdef:
+    type: procedure 
+    definitions: target
+    script:
+        - determine <proc[target_total_mdef].context[<[target]>].sub[<[target].flag[mdef_debuff]>]>
+target_final_pdmg:
+    type: procedure 
+    definitions: target
+    script:
+        - determine <proc[target_total_pdmg].context[<[target]>].sub[<[target].flag[pdmg_debuff]>]>
+target_final_mdmg:
+    type: procedure 
+    definitions: target
+    script:
+        - determine <proc[target_total_mdmg].context[<[target]>].sub[<[target].flag[mdmg_debuff]>]>

@@ -1,0 +1,40 @@
+potion_of_minor_intelligence:
+    type: item
+    material: i@potion
+    display name: Potion of Minor Power
+    lore:
+    - increases intelligence stat by 15 for 15m
+    
+potion_of_minor_endurance:
+    type: item
+    material: i@potion
+    display name: Potion of Minor Endurance
+    - increases endurance stat by 15 for 15m
+    
+potion_of_minor_dexterity:
+    type: item
+    material: i@potion
+    display name: Potion of Minor Dexterity
+    lore:
+    - increases dexterity stat by 15 for 15m
+    
+potion_of_minor_strength:
+    type: item
+    material: i@potion
+    display name: Potion of Minor Strength
+    lore:
+    - increases intelligence stat by 15 for 15m
+    
+potion_of_minor_spirit:
+    type: item
+    material: i@potion
+    display name: Potion of Minor Spirit
+    lore:
+    - increases spirit stat by 15 for 15m
+    
+potion_of_minor_crit:
+    type: item
+    material: i@potion
+    display name: Potion of Minor Power
+    lore:
+    - increases crit stat by 15 for 15m

@@ -1,0 +1,24 @@
+total_int:
+    type: procedure
+    script:
+    - determine <player.flag[intelligence].add[<player.flag[bonus_intelligence]>].add[<player.flag[temp_intelligence]>]>
+    
+total_str:
+    type: procedure
+    script:
+    - determine <player.flag[strength].add[<player.flag[bonus_strength]>].add[<player.flag[temp_strength]>]>
+
+total_spr:
+    type: procedure
+    script:
+    - determine <player.flag[spirit].add[<player.flag[bonus_spirit]>].add[<player.flag[temp_spirit]>]>
+    
+total_dex:
+    type: procedure
+    script:
+    - determine <player.flag[dexterity].add[<player.flag[bonus_dexterity]>].add[<player.flag[temp_dexterity]>]>
+    
+total_end:
+    type: procedure
+    script:
+    - determine <player.flag[endurance].add[<player.flag[bonus_endurance]>].add[<player.flag[temp_endurance]>]>

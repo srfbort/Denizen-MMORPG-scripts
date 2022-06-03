@@ -1,0 +1,25 @@
+hotbarswap:
+    type: world
+    events:
+        on player swaps items:
+            - if <player.flag[activehotbar]> == survival:
+                - foreach <list[1|2|3|4|5|6|7|8|9]>:
+                    - flag player survivalhotbar:->:<player.inventory.slot[<[value]>]><&chr[261B]><player.inventory.slot[<[value]>].quantity><&chr[261A]><[value]>
+                    - take slot:<[value]> quantity:<player.inventory.slot[<[value]>].quantity>
+                - flag player activehotbar:combat
+                - foreach <player.flag[combathotbar]>:
+                    - give <item[<[value].before[<&chr[261B]>]>]> quantity:<[value].after[<&chr[261B]>].before[<&chr[261A]>]> slot:<[value].after[<&chr[261A]>]>
+                - flag player combathotbar:!
+                - narrate <player.flag[activehotbar]>
+
+            - else if <player.flag[activehotbar]> == combat:
+                - foreach <list[1|2|3|4|5|6|7|8|9]>:
+                    - flag player combathotbar:->:<player.inventory.slot[<[value]>]><&chr[261B]><player.inventory.slot[<[value]>].quantity><&chr[261A]><[value]>
+                    - take slot:<[value]> quantity:<player.inventory.slot[<[value]>].quantity>
+                - flag player activehotbar:survival
+                - foreach <player.flag[survivalhotbar]>:
+                    - give <item[<[value].before[<&chr[261B]>]>]> quantity:<[value].after[<&chr[261B]>].before[<&chr[261A]>]> slot:<[value].after[<&chr[261A]>]>
+                - flag player survivalhotbar:!
+                - narrate <player.flag[activehotbar]>
+
+            - determine cancelled

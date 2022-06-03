@@ -1,0 +1,45 @@
+playerspellbook:
+    type: inventory
+    inventory: chest
+    title: "SKILLS"
+    size: 45
+    slots:
+    - "[<item[fire_wave_listing]>] [ice_wave_listing] [ice_nova_listing] [meteor_listing] [explosive_force_listing] [irresistable_pull_listing] [] [] []"
+    - "[rapid_slash_listing] [shattering_strike_listing] [serrated_slash_listing] [whirlwind_listing] [rush_listing] [crippling_strike_listing] [] [] [assassinate_listing]"
+    - "[rapid_shot_listing] [Aimed_shot_listing] [poison_shot_listing] [hemorrhage_listing] [piercing_shot_listing] [rolling_shot_listing] [] [] []"
+    - "[raging_spirit_listing] [] [] [] [] [] [] [] []"
+    - "[heal_self_listing] [heal_other_listing] [regenerate_listing] [healing_blast_listing] [] [] [] [] []"
+
+spellbindmenu:
+    type: world
+    events:            
+        on player clicks in playerspellbook:
+            - if <context.clicked_inventory> != <player.inventory>:
+                - if <player.flag[bindingtoitem]> != none:
+                    - if <context.item.script.yaml_key[lv]> <= <player.flag[level]>:
+                        - if <player.has_flag[<context.item.script.yaml_key[spell]>_obtained]> || <player.flag[obtainedall]> == true:
+                            - if <context.item.script.yaml_key[spelltype]> == <script[<player.flag[bindingtoitem]>].yaml_key[spelltype]>:
+                                - choose <context.click>:
+                                    - case left:
+                                        - flag player <player.flag[bindingtoitem]>_left:<context.item.script.yaml_key[spell]>
+                                        - narrate "<context.item.display> binded to <item[<player.flag[bindingtoitem]>].display> left click"
+                                    - case right:
+                                        - flag player <player.flag[bindingtoitem]>_right:<context.item.script.yaml_key[spell]>
+                                        - narrate "<context.item.display> binded to <item[<player.flag[bindingtoitem]>].display> right click"
+                                - flag player bindingtoitem:none
+                                - determine cancelled
+                            - else:
+                                - narrate "Spell cannot be bound to this item"
+                        - else:
+                            - narrate <context.item.script.yaml_key[spell]>_obtained>
+                            - narrate "You have not learned this spell."
+                    - else:
+                        - narrate "you are not high enough level for this spell"
+                - else:
+                        - narrate "please choose an item to bind to"
+                        - determine cancelled
+            - else:
+                - if <context.item.script.yaml_key[itemtype]> == spell:
+                    - flag player bindingtoitem:<context.item.script.name>
+                    - narrate "<context.item.display> selected for binding."
+            - determine cancelled

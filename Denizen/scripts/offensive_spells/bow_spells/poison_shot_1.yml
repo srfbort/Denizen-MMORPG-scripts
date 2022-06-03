@@ -1,0 +1,103 @@
+poison_shot_listing:
+    type: item
+    lv: 15
+    skillpointlv: 10
+    levelflag: poisonshotlevel
+    skillpointmax: 6
+    spelltype: bow
+    spell: poison_shot
+    material: bow
+    mechanisms:
+        unbreakable: true
+    display name: Poison Shot
+    lore:
+    - A powerful poisonous attack.
+    enchantments:
+    - knockback:2
+    hide:
+    - enchantments
+
+poison_shot:
+    type: task
+    script:
+    - if !<player.has_flag[poisonshotlevel]>:
+        - flag player poisonshotlevel:1
+    - flag player poison_shot_1_target_found:0
+    - playsound sound:ENTITY_ARROW_SHOOT at:<player.location>
+    - foreach <player.eye_location.points_between[<player.eye_location.forward[30]>]> as:arrow_location:
+        - if <player.flag[poison_shot_1_target_found]> == 0:
+            - playeffect effect:SPELL_WITCH at:<[arrow_location]> quantity:5 offset:0,0,0 visibility:65
+            - if <[arrow_location].find.living_entities.within[1.5].exclude[<player>].size> > 0:
+                - define targets <[arrow_location].find.living_entities.within[1.5].exclude[<player>]>
+                - foreach <[targets]>:
+                    - define target <[value]>
+                    - if <proc[target_check].context[<[target]>]> != friendlyplayer:
+                        - flag player poison_shot_1_target_found:1
+                        - run poison_shot_damage def:<[target]>
+                        - run poison_shot_dot def:<[target]>
+                        - foreach stop
+            - else:
+            # no target found
+        - else:
+            - foreach stop
+                    
+    - flag player poison_shot_1_target_found:0
+
+poison_shot_damage:
+    type: task
+    speed: instant
+    definitions: target
+    script:
+        - define poisonshotbasedmg <player.flag[poisonshotlevel].mul[5].add[5]>
+        - define strscaling <proc[total_str].div[10]>
+        - define playerpdmg <proc[final_pdmg].div[2]>
+        - define poisonshotfinaldmg <[poisonshotbasedmg].add[<[strscaling]>].add[<[playerpdmg]>].round_down>
+        - choose <proc[target_check].context[<[target]>]>:
+                - case mythicmob:
+                    - define combined <[target].flag[pdef].add[<[poisonshotfinaldmg]>]>
+                    - define defreduc <[poisonshotfinaldmg].div[<[combined]>]>
+                    - define final <[poisonshotfinaldmg].mul[<[defreduc]>]>
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[final].round_to[0]> source:<player>
+                - case enemyplayer:
+                    - define combined <[target].flag[final_pdef].add[<[poisonshotfinaldmg]>]>
+                    - define defreduc <[poisonshotfinaldmg].div[<[combined]>]>
+                    - define final <[poisonshotfinaldmg].mul[<[defreduc]>]>
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[final].round_to[0]> source:<player>
+                - case regularmob:
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[poisonshotfinaldmg]> source:<player>
+
+poison_shot_dot:
+    type: task
+    definitions: target
+    speed: instant
+    script:
+        - choose <proc[target_check].context[<[target]>]>:
+            - case mythicmob:
+
+            - case enemyplayer:
+                - narrate "running ssdot script"
+                - define dexscaling <proc[total_dex].div[20]>
+                - define pdmg <proc[final_pdmg].div[15]>
+                - define poisonshotlevel <player.flag[poisonshotlevel].mul[2]>
+                - define final <[dexscaling].add[<[pdmg]>].add[<[poisonshotlevel]>].round>
+                - narrate <[dexscaling].add[<[pdmg]>].add[<[poisonshotlevel]>]>
+                - narrate "dot: <[final].round>"
+                - if <[target].flag[dots].separated_by[|].contains_any[poisonshotdot]>:
+                    - define dotdata <[target].flag[dots].get_sub_items[poisonshotdot].split_by[|]>
+                    - if <[dotdata].after[/]> < <[defreduc]>:
+                        - flag <[target]> dots:<-:<[dotdata]>
+                        - flag <[target]> dotted:true
+                        - flag <[target]> dots:->:poisonshotdot<&co><[final]>/poison\<player.name><&ns><player.flag[poisonshotlevel]>
+                        - flag <[target]> poisonshotdot:true duration:5s
+                    - else:
+                        - narrate "dot extended"
+                        - define currentexpiration <[target].flag[poisonshotdot].expiration>
+                        - flag <[target]> poisonshotdot:true duration:<[currentexpiration].add[5s]>
+                - else:
+                    - flag <[target]> dotted:true
+                    - flag <[target]> dots:->:poisonshotdot<&co><[final]>/poison\<player.name><&ns><player.flag[poisonshotlevel]>
+                    - flag <[target]> poisonshotdot:true duration:10s
+                    - announce "<[target].name> pdef dotted by <player.name>"

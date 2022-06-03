@@ -1,0 +1,343 @@
+spell_wand:
+    type: item
+    itemtype: spell
+    spelltype: wand
+    material: i@stick
+    mechanisms:
+        unbreakable: true
+        nbt:
+            - itemid/<util.random.uuid>
+    display name: Magic Wand
+    lore:
+    - A wand which enables the bearer to cast various magics.
+    enchantments:
+    - knockback:2
+    
+spell_wand_two:
+    type: item
+    itemtype: spell
+    spelltype: wand
+    material: i@stick
+    mechanisms:
+        unbreakable: true
+        nbt:
+            - itemid/<util.random.uuid>
+    display name: Magic Wand 2
+    lore:
+    - A wand which enables the bearer to cast various magics.
+    enchantments:
+    - knockback:2
+    
+spell_wand_three:
+    type: item
+    itemtype: spell
+    spelltype: wand
+    material: i@stick
+    mechanisms:
+        unbreakable: true
+        nbt:
+            - itemid/<util.random.uuid>
+    display name: Magic Wand 3
+    lore:
+    - A wand which enables the bearer to cast various magics.
+    enchantments:
+    - knockback:2
+
+spell_wand_handler:
+    type: world
+    events:
+        on player clicks with spell_wand:
+        - if <context.click_type.contains_any[left]>:
+            - run <player.flag[spell_wand_left]> instantly
+        - else:
+            - run <player.flag[spell_wand_right]> instantly
+            
+spell_wand_two_handler:
+    type: world
+    events:
+        on player clicks with spell_wand_two:
+        - if <context.click_type.contains_any[left]>:
+            - run <player.flag[spell_wand_two_left]> instantly
+        - else:
+            - run <player.flag[spell_wand_two_right]> instantly
+            
+spell_wand_three_handler:
+    type: world
+    events:
+        on player clicks with spell_wand_three:
+        - if <context.click_type.contains_any[left]>:
+            - run <player.flag[spell_wand_three_left]> instantly
+        - else:
+            - run <player.flag[spell_wand_three_right]> instantly
+
+            
+            
+spell_sword:
+    type: item
+    itemtype: spell
+    spelltype: sword
+    material: iron_sword
+    mechanisms:
+        unbreakable: true
+    display name: Sword
+    lore:
+    - A sword which enables the bearer to use various techniques.
+    enchantments:
+    - knockback:2
+
+spell_sword_two:
+    type: item
+    itemtype: spell
+    spelltype: sword
+    material: iron_sword
+    mechanisms:
+        unbreakable: true
+    display name: Sword
+    lore:
+    - A sword which enables the bearer to use various techniques.
+    enchantments:
+    - knockback:2
+    
+spell_sword_three:
+    type: item
+    itemtype: spell
+    spelltype: sword
+    material: iron_sword
+    mechanisms:
+        unbreakable: true
+    display name: Sword
+    lore:
+    - A sword which enables the bearer to use various techniques.
+    enchantments:
+    - knockback:2
+    
+spell_sword_handler:
+    type: world
+    events:
+        on player clicks with spell_sword:
+        - if <context.click_type.contains_any[left]>:
+            - run <player.flag[spell_sword_left]> instantly
+        - else:
+            - run <player.flag[spell_sword_right]> instantly
+            
+spell_sword_two_handler:
+    type: world
+    events:
+        on player clicks with spell_sword_two:
+        - if <context.click_type.contains_any[left]>:
+            - run <player.flag[spell_sword_two_left]> instantly
+        - else:
+            - run <player.flag[spell_sword_two_right]> instantly
+            
+spell_sword_three_handler:
+    type: world
+    events:
+        on player clicks with spell_sword_three:
+        - if <context.click_type.contains_any[left]>:
+            - run <player.flag[spell_sword_three_left]> instantly
+        - else:
+            - run <player.flag[spell_sword_three_right]> instantly
+            
+spell_bow:
+    type: item
+    itemtype: spell
+    spelltype: bow
+    material: bow
+    mechanisms:
+        unbreakable: true
+    display name: Bow
+    lore:
+    - A bow which enables the bearer to use various techniques.
+    enchantments:
+    - knockback:2
+
+spell_bow_two:
+    type: item
+    itemtype: spell
+    spelltype: bow
+    material: bow
+    mechanisms:
+        unbreakable: true
+    display name: Bow
+    lore:
+    - A bow which enables the bearer to use various techniques.
+    enchantments:
+    - knockback:2
+    
+spell_bow_three:
+    type: item
+    itemtype: spell
+    spelltype: bow
+    material: bow
+    mechanisms:
+        unbreakable: true
+    display name: bow
+    lore:
+    - A bow which enables the bearer to use various techniques.
+    enchantments:
+    - knockback:2
+    
+spell_bow_handler:
+    type: world
+    events:
+        on player clicks with spell_bow:
+        - if <context.click_type.contains_any[left]>:
+            - run <player.flag[spell_bow_left]> instantly
+        - else:
+            - run <player.flag[spell_bow_right]> instantly
+            
+spell_bow_two_handler:
+    type: world
+    events:
+        on player clicks with spell_bow_two:
+        - if <context.click_type.contains_any[left]>:
+            - run <player.flag[spell_bow_two_left]> instantly
+        - else:
+            - run <player.flag[spell_bow_two_right]> instantly
+            
+spell_bow_three_handler:
+    type: world
+    events:
+        on player clicks with spell_bow_three:
+        - if <context.click_type.contains_any[left]>:
+            - run <player.flag[spell_bow_three_left]> instantly
+        - else:
+            - run <player.flag[spell_bow_three_right]> instantly
+
+spell_shield:
+    type: item
+    itemtype: spell
+    spelltype: shield
+    material: shield
+    mechanisms:
+        unbreakable: true
+    display name: Shield
+    lore:
+    - A shield which enables the bearer to use various skills.
+    enchantments:
+    - knockback:2
+    
+spell_shield_two:
+    type: item
+    itemtype: spell
+    spelltype: shield
+    material: shield
+    mechanisms:
+        unbreakable: true
+    display name: Shield 2
+    lore:
+    - A shield which enables the bearer to use various skills.
+    enchantments:
+    - knockback:2
+    
+spell_shield_three:
+    type: item
+    itemtype: spell
+    spelltype: shield
+    material: shield
+    mechanisms:
+        unbreakable: true
+    display name: Shield 3
+    lore:
+    - A shield which enables the bearer to use various skills.
+    enchantments:
+    - knockback:2
+
+spell_shield_handler:
+    type: world
+    events:
+        on player clicks with spell_shield:
+        - if <context.click_type.contains_any[left]>:
+            - run <player.flag[spell_shield_left]> instantly
+        - else:
+            - run <player.flag[spell_shield_right]> instantly
+            
+spell_shield_two_handler:
+    type: world
+    events:
+        on player clicks with spell_shield_two:
+        - if <context.click_type.contains_any[left]>:
+            - run <player.flag[spell_shield_two_left]> instantly
+        - else:
+            - run <player.flag[spell_shield_two_right]> instantly
+            
+spell_shield_three_handler:
+    type: world
+    events:
+        on player clicks with spell_shield_three:
+        - if <context.click_type.contains_any[left]>:
+            - run <player.flag[spell_shield_three_left]> instantly
+        - else:
+            - run <player.flag[spell_shield_three_right]> instantly
+
+spell_bell:
+    type: item
+    itemtype: spell
+    spelltype: bell
+    material: bell
+    mechanisms:
+        unbreakable: true
+        nbt:
+            - itemid/<util.random.uuid>
+    display name: bell
+    lore:
+    - A bell which enables the bearer to use various skills.
+    enchantments:
+    - knockback:2
+    
+spell_bell_two:
+    type: item
+    itemtype: spell
+    spelltype: bell
+    material: bell
+    mechanisms:
+        unbreakable: true
+        nbt:
+            - itemid/<util.random.uuid>
+    display name: bell 2
+    lore:
+    - A bell which enables the bearer to use various skills.
+    enchantments:
+    - knockback:2
+    
+spell_bell_three:
+    type: item
+    itemtype: spell
+    spelltype: bell
+    material: bell
+    mechanisms:
+        unbreakable: true
+        nbt:
+            - itemid/<util.random.uuid>
+    display name: bell 3
+    lore:
+    - A bell which enables the bearer to use various skills.
+    enchantments:
+    - knockback:2
+
+spell_bell_handler:
+    type: world
+    events:
+        on player clicks with spell_bell:
+        - if <context.click_type.contains_any[left]>:
+            - run <player.flag[spell_bell_left]> instantly
+        - else:
+            - run <player.flag[spell_bell_right]> instantly
+            
+spell_bell_two_handler:
+    type: world
+    events:
+        on player clicks with spell_bell_two:
+        - if <context.click_type.contains_any[left]>:
+            - run <player.flag[spell_bell_two_left]> instantly
+        - else:
+            - run <player.flag[spell_bell_two_right]> instantly
+            
+spell_bell_three_handler:
+    type: world
+    events:
+        on player clicks with spell_bell_three:
+        - if <context.click_type.contains_any[left]>:
+            - run <player.flag[spell_bell_three_left]> instantly
+        - else:
+            - run <player.flag[spell_bell_three_right]> instantly

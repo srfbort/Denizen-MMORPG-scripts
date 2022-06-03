@@ -1,0 +1,22 @@
+explosive_force_listing:
+    type: item
+    spelltype: wand
+    spell: explosive_force
+    lv: 1
+    material: book
+    mechanisms:
+        unbreakable: true
+    display name: Explosive Force
+    lore:
+    - Explosion of magic that forces all enemies away.
+    enchantments:
+    - knockback:2
+        
+explosive_force:
+    type: task
+    script:
+    - define targets <player.location.find.living_entities.within[8].exclude[<player>]>
+    - foreach <[targets]>:
+      - define vector <player.location.face[<[value].location>]>
+      - narrate <[vector].direction.vector>
+      - adjust <[value]> velocity:<[vector].direction.vector.mul[2].with_y[<[vector].direction.vector.y.add[1]>]>

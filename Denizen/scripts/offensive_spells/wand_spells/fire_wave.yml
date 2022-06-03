@@ -1,0 +1,76 @@
+fire_wave_listing:
+    type: item
+    spelltype: wand
+    spell: fire_wave
+    lv: 1
+    skillpointlv: 10
+    levelflag: firewavelevel
+    skillpointmax: 6
+    material: book
+    mechanisms:
+        unbreakable: true
+    display name: Fire Wave
+    lore:
+    - a slowmoving wave of fire that burns everything it touches.
+    enchantments:
+    - knockback:2
+        
+fire_wave:
+    type: task
+    script:
+    - if !<player.has_flag[firewavelevel]:
+        - flag player firewavelevel:1
+    - define lavabeam:cu@<player.eye_location>|<player.location.cursor_on[25].simple>
+    - define cursor_aim:<player.eye_location.points_between[<player.location.cursor_on[25].ignore[water|flowing_water|grass|tall_grass|air]>]>
+    - playsound <player.location.cursor_on[5]> sound:BLOCK_CAMPFIRE_CRACKLE
+    - playsound <player.location.cursor_on[5]> sound:BLOCK_FIRE_AMBIENT
+    - define randomint:<util.random.int[1].to[1000]>
+    - define last:<player.eye_location.forward[1].points_between[<player.location.cursor_on[25].ignore[water|flowing_water|grass|tall_grass|air]>].last>
+    - define foreachskip 0
+    - foreach <player.eye_location.forward[1].points_between[<player.location.cursor_on[25].ignore[water_source|flowing_water|grass|tall_grass|air]>]>:
+        - define foreachskip:+:1
+        - playeffect effect:flame at:<[value]> quantity:1 visibility:35
+        - if <[foreachskip].round_Down.mod[0.5]> == 0:
+            - wait 1t
+        - playeffect effect:lava at:<[value]> quantity:5 offset:0,0,0 visibility:35
+        - define locationcheck <[value].find.living_entities.within[2].exclude[<player>]>
+        - if <[locationcheck].size> > 0:
+                - define target <[locationcheck].get[1]>
+                - if <proc[target_check].context[<[target]>]> != friendlyplayer:
+                    - define last <[value]>
+                    - foreach stop
+    - if <[target].is_living>:
+        - narrate <proc[fire_wave_damage].context[<[target]>]>
+        - run fire_wave_Damage def:<[target]>
+    - else:
+        - narrate "no target found"
+    - playeffect effect:EXPLOSION_LARGE at:<[last]> quantity:10 visibility:35
+    - playsound <[last]> sound:ENTITY_GENERIC_EXPLODE volume:1.8
+
+fire_wave_damage:
+    type: task
+    speed: instant
+    definitions: target
+    script:
+        - define firewavebasedmg <player.flag[firewavelevel].mul[5].add[5]>
+        - define intscaling <proc[total_int].div[10]>
+        - define playermdmg <proc[final_mdmg].div[2]>
+        - define firewavefinaldmg <[firewavebasedmg].add[<[intscaling]>].add[<[playermdmg]>].round_down>
+        - narrate <[firewavebasedmg]>
+        - choose <proc[target_check].context[<[target]>]>:
+                - case mythicmob:
+                    - define combined <[target].flag[mdef].add[<[firewavefinaldmg]>]>
+                    - define defreduc <[firewavefinaldmg].div[<[combined]>]>
+                    - define final <[firewavefinaldmg].mul[<[defreduc]>]>
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[final].round_to[0]> source:<player>
+                - case enemyplayer:
+                    - define combined <[target].flag[final_mdef].add[<[firewavefinaldmg]>]>
+                    - define defreduc <[firewavefinaldmg].div[<[combined]>]>
+                    - define final <[firewavefinaldmg].mul[<[defreduc]>]>
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[final].round_to[0]> source:<player>
+                - case regularmob:
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[firewavefinaldmg]> source:<player>
+                    - narrate regularmob

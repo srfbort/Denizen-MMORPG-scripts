@@ -1,0 +1,129 @@
+t1_Wisen_buff:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: buff
+  taskname: buff_task
+  buffname: wisen_buff
+  duration: 2s
+  level: 10
+  tier: 1
+  exp: 170
+  statbuffs: intelligence:50
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  alchemylevel: 15
+  mechanisms:
+    nbt:
+      - itemid/23525
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Wisen
+  lore:
+    - Tier<&co><&sp>1
+    - Level<&co><&sp>1
+    - Increases intelligence.
+
+t2_Wisen_buff:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: buff
+  taskname: buff_task
+  buffname: wisen_buff
+  duration: 2s
+  level: 15
+  tier: 2
+  exp: 280
+  statbuffs: intelligence:50
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  alchemylevel: 30
+  mechanisms:
+    nbt:
+      - itemid/23525
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Wisen
+  lore:
+    - Tier<&co><&sp>2
+    - Level<&co><&sp>1
+    - Increases intelligence.
+
+t3_Wisen_buff:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: buff
+  taskname: buff_task
+  buffname: wisen_buff
+  duration: 2s
+  level: 30
+  tier: 3
+  exp: 400
+  statbuffs: intelligence:50
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  alchemylevel: 45
+  mechanisms:
+    nbt:
+      - itemid/23525
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Wisen
+  lore:
+    - Tier<&co><&sp>3
+    - Level<&co><&sp>1
+    - Increases intelligence.
+
+t4_Wisen_buff:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: buff
+  taskname: buff_task
+  buffname: wisen_buff
+  duration: 2s
+  level: 45
+  tier: 4
+  exp: 550
+  statbuffs: intelligence:50
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  alchemylevel: 55
+  mechanisms:
+    nbt:
+      - itemid/23525
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Wisen
+  lore:
+    - Tier<&co><&sp>4
+    - Level<&co><&sp>1
+    - Increases intelligence.
+
+t5_Wisen_buff:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: buff
+  taskname: buff_task
+  buffname: wisen_buff
+  duration: 2s
+  level: 65
+  tier: 5
+  exp: 800
+  statbuffs: intelligence:50
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  alchemylevel: 75
+  mechanisms:
+    nbt:
+      - itemid/23525
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Wisen
+  lore:
+    - Tier<&co><&sp>5
+    - Level<&co><&sp>1
+    - Increases intelligence.

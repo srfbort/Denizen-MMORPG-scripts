@@ -1,0 +1,16 @@
+antidot_task:
+  type: task
+  speed: instant
+  definitions: player|antidotitem|dottype
+  script:
+    - ratelimit <[player]> 1s
+    - if <[player].flag[dots].size> > 0:
+      - foreach <[player].flag[dots]> as:dot:
+        - if <[dot].after[/].before[\]> == <[dottype]>:
+          - if <[dot].after[<&ns>]> <= <[antidotitem].script.yaml_key[tier]>:
+            - flag <[player]> <[dot].before[<&co>]>:true duration:1t
+            - take <[antidotitem]> quantity:1 from:<[player].inventory>
+          - else:
+            - narrate "potion is not strong to remove that <[dottype]>."
+    - else:
+      - narrate "no dots to remove"  

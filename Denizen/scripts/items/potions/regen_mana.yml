@@ -1,0 +1,129 @@
+t1_mana_regen:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: regen
+  tier: 1
+  taskname: regenpot_task
+  regenpottype: mana
+  regenname: mana_regen
+  regenamount: 1
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  duration: 5s
+  level: 15
+  exp: 140
+  alchemylevel: 10
+  mechanisms:
+    nbt:
+      - itemid/265247445
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Mana Regeneration Potion
+  lore:
+    - Tier<&co> 1
+    - Potion with magical properties, invigorates your mana pool.
+
+t2_mana_regen:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: regen
+  tier: 2
+  taskname: regenpot_task
+  regenpottype: mana
+  regenname: mana_regen
+  regenamount: 5
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  duration: 5s
+  level: 15
+  exp: 250
+  alchemylevel: 25
+  mechanisms:
+    nbt:
+      - itemid/265247445
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Mana Regeneration Potion
+  lore:
+    - Tier<&co> 2
+    - Potion with magical properties, invigorates your mana pool.
+
+t3_mana_regen:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: regen
+  tier: 3
+  taskname: regenpot_task
+  regenpottype: mana
+  regenname: mana_regen
+  regenamount: 10
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  duration: 5s
+  level: 30
+  exp: 360
+  alchemylevel: 40
+  mechanisms:
+    nbt:
+      - itemid/265247445
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Mana Regeneration Potion
+  lore:
+    - Tier<&co> 3
+    - Potion with magical properties, invigorates your mana pool.
+
+t4_mana_regen:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: regen
+  tier: 4
+  taskname: regenpot_task
+  regenpottype: mana
+  regenname: mana_regen
+  regenamount: 15
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  duration: 5s
+  level: 45
+  exp: 500
+  alchemylevel: 55
+  mechanisms:
+    nbt:
+      - itemid/265247445
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Mana Regeneration Potion
+  lore:
+    - Tier<&co> 4
+    - Potion with magical properties, invigorates your mana pool.
+
+t5_mana_regen:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: regen
+  tier: 5
+  taskname: regenpot_task
+  regenpottype: mana
+  regenname: mana_regen
+  regenamount: 25
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  duration: 5s
+  level: 65
+  exp: 750
+  alchemylevel: 70
+  mechanisms:
+    nbt:
+      - itemid/265247445
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Mana Regeneration Potion
+  lore:
+    - Tier<&co> 5
+    - Potion with magical properties, invigorates your mana pool.

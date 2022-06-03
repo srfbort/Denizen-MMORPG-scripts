@@ -1,0 +1,21 @@
+heal_self_listing:
+    type: item
+    lv: 1
+    spelltype: bell
+    spell: heal_self
+    material: bell
+    mechanisms:
+        unbreakable: true
+    display name: Heal Self
+    lore:
+    - Heal urself?
+    enchantments:
+    - knockback:2
+    hide:
+    - enchantments
+
+heal_self:
+    type: task
+    script:
+    - ratelimit <player> 3s
+    - heal <player> 5

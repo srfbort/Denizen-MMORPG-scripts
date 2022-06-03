@@ -1,0 +1,32 @@
+player_inventory_script:
+    type: world
+    events:
+        on player clicks in inventory:
+        - if <player.open_inventory> == <player.inventory>:
+            - choose <context.slot>:
+                - case 40:
+                    - if <proc[debuffed]> == true:
+                        - narrate "You cannot open the equip menu while you are debuffed"
+                        - inventory close
+                        - determine cancelled
+                    - else:
+                        - determine passively cancelled
+                        - inventory close
+                        - wait 1t
+                        - inventory open d:<player.uuid>_<player.flag[class]>_equipmentinv
+                - case 39:
+                    - determine passively cancelled
+                    - inventory close
+                    - wait 1t
+                    - inventory open d:skillmenuselectormenu
+                - case 38:
+                    - determine passively cancelled
+                    - inventory close
+                    - wait 1t
+                    - inventory open d:in@stat_menu
+                    - sidebar set title:Remaining<&sp>Points:<&sp><player.flag[stat_points]> Values:Power:<&sp><player.flag[intelligence]><&lb><player.flag[bonus_intelligence]><&rb>|Endurance:<&sp><player.flag[endurance]><&lb><player.flag[bonus_endurance]><&rb>|Strength:<&sp><player.flag[strength]><&lb><player.flag[bonus_strength]><&rb>|Dexterity:<&sp><player.flag[dexterity]><&lb><player.flag[bonus_dexterity]><&rb>|Spirit:<&sp><player.flag[spirit]><&lb><player.flag[bonus_spirit]><&rb>|Crit<&sp>Chance:<&sp><player.flag[crit_chance].div[10].as_Decimal><&lb><player.flag[bonus_crit_chance].div[10].as_decimal><&rb>
+                - case 37:
+                    - determine passively cancelled
+                    - inventory close
+                    - wait 1t
+                    - inventory open d:normalpotion_menu

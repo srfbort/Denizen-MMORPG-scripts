@@ -1,0 +1,25 @@
+particle_test:
+    type: item
+    spelltype: wand
+    spell: fire_wave
+    lv: 1
+    material: book
+    mechanisms:
+        unbreakable: true
+    display name: Testing
+    lore:
+    - a slowmoving wave of fire that burns everything it touches.
+    enchantments:
+    - knockback:2
+    
+particle_test_Script:
+    type: task
+    script:
+    - repeat <element[360].div[<[density]>]>:
+        - define Angle <location[0,0,<[width]>].rotate_around_y[<[value].to_radians.mul[<[Density]>]>]>        
+        - playeffect effect:<[particle]> at:<[loc].points_between[<[Loc].add[<[Angle]>]>].distance[<[lengthdensity]>].exclude[<[loc]>]> quantity:1 offset:0 visibility:35
+        
+        
+        
+        
+        

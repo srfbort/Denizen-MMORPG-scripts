@@ -1,0 +1,144 @@
+mm_homing_fire:
+    type: command
+    debug: false
+    name: mmfireone
+    description: homing burst of fire
+    usage: /mmfireone
+    script:
+    - define start <entity[<context.args.get[1]>].eye_location>
+    - define fire <entity[<context.args.get[1]>].eye_location>
+    - define target <entity[<context.args.get[1]>].location.find.players.within[35].get[1]>
+    - define targetloc <[target].location>
+    
+    - while <[fire].distance[<[targetloc]>]> > 2:
+        - define fire <[fire].points_between[<[targetloc]>].get[2]>
+        - define targetloc <[target].location>
+        - playeffect effect:flame at:<[fire]> quantity:1 offset:0,0,0 visibility:3
+        - wait 2t
+        - playeffect effect:lava at:<[fire]> quantity:5 offset:0,0,0 visibility:35
+    - hurt <[target]> 5
+    
+
+    
+mm_nuke:
+    type: command
+    debug: true
+    name: mmnuke
+    description: homing burst of fire
+    usage: /mmnuke
+    script:
+    - define entity  <entity[<context.args.get[1]>]>
+    - define start <entity[<context.args.get[1]>].eye_location>
+    - define fire <entity[<context.args.get[1]>].eye_location>
+    - define target <entity[<context.args.get[1]>].location.find.players.within[35].get[1]>
+    - define targetloc <[target].location>
+    
+    
+    - foreach <[start].points_between[<[start].with_y[<[start].y.add[4]>]>]>:
+        - announce <[value]>
+        - playeffect effect:EXPLOSION_NORMAL at:<[value]> quantity:10
+        - wait 1t
+    
+    
+    - define loc <entity[<context.args.get[1]>].location>
+    - define particle crit
+    - define width 5
+    - define Density 6
+    - define fineness 20
+    - define lengthdensity 5
+    - define effectlist <list[]>
+    
+    - flag <[entity]> mmnukewait:true duration:5s
+    - while !<[entity].flag[mmnukewait].is_expired>:
+        - repeat <element[360].div[<[density]>]>:
+            - define Angle <location[0,0,<[width]>].rotate_around_y[<[value].to_radians.mul[<[Density]>]>]>
+            - playeffect effect:<[particle]> at:<[value]> quantity:1 offset:0 visibility:30
+        - wait 10t
+    - playeffect effect:EXPLOSION_NORMAL at:<entity[<context.args.get[1]>].location> quantity:100 offset:5,0,5 visibility:30
+    
+mm_homing_multi_fire1:
+    type: command
+    debug: false
+    name: mmfiremultione
+    description: homing burst of fire
+    usage: /mmfiremultione
+    script:
+    - define start <entity[<context.args.get[1]>].eye_location>
+    - define target <entity[<context.args.get[1]>].location.find.players.within[35].get[1]>
+    - define targetloc <[target].location>
+    - define entity  <entity[<context.args.get[1]>]>
+    - flag <[entity]> multifireindicator:true duration:2s
+    - while !<[entity].flag[multifireindicator].is_expired>:
+        - playeffect effect:lava at:<[entity].eye_location.up[4]> quantity:5 offset:0,0,0 visibility:40
+        - wait 2t
+    - define fire <entity[<context.args.get[1]>].eye_location.up[4]>
+    - while <[fire].distance[<[targetloc]>]> > 2:
+        - define fire <[fire].points_between[<[targetloc]>].get[2]>
+        - define targetloc <[target].location>
+        - playeffect effect:flame at:<[fire]> quantity:1 offset:0,0,0 visibility:40
+        - wait 2t
+        - playeffect effect:lava at:<[fire]> quantity:5 offset:0,0,0 visibility:40
+    - hurt <[target]> 5
+    - announce "hurt <[target]>"
+
+mm_homing_multi_fire2:
+    type: command
+    debug: false
+    name: mmfiremultitwo
+    description: homing burst of fire
+    usage: /mmfiremultitwo
+    script:
+    - define start <entity[<context.args.get[1]>].eye_location>
+    - define entity  <entity[<context.args.get[1]>]>
+    - flag <[entity]> multifireindicator:true duration:2s
+    - while !<[entity].flag[multifireindicator].is_expired>:
+        - playeffect effect:lava at:<[entity].eye_location.up[4]> quantity:5 offset:0,0,0 visibility:40
+        - wait 2t
+    - define fire <entity[<context.args.get[1]>].eye_location.up[4]>
+    - if <entity[<context.args.get[1]>].location.find.players.within[35].get[2]||noplayer> == noplayer:
+        - define target <entity[<context.args.get[1]>].location.find.players.within[35].get[1]>
+        - define targetloc <[target].location>
+        - wait 1s
+    - else:
+        - define target <entity[<context.args.get[1]>].location.find.players.within[35].get[2]>
+        - define targetloc <[target].location>
+        
+    - while <[fire].distance[<[targetloc]>]> > 2:
+        - define fire <[fire].points_between[<[targetloc]>].get[2]>
+        - define targetloc <[target].location>
+        - playeffect effect:flame at:<[fire]> quantity:1 offset:0,0,0 visibility:40
+        - wait 2t
+        - playeffect effect:lava at:<[fire]> quantity:5 offset:0,0,0 visibility:40
+    - hurt <[target]> 5
+
+mm_homing_multi_fire3:
+    type: command
+    debug: false
+    name: mmfiremultithree
+    description: homing burst of fire
+    usage: /mmfiremultithree
+    script:
+    - define start <entity[<context.args.get[1]>].eye_location>
+    - define entity  <entity[<context.args.get[1]>]>
+    - flag <[entity]> multifireindicator:true duration:2s
+    - while !<[entity].flag[multifireindicator].is_expired>:
+        - playeffect effect:lava at:<[entity].eye_location.up[4]> quantity:5 offset:0,0,0 visibility:40
+        - wait 2t
+    - define fire <entity[<context.args.get[1]>].eye_location.up[4]>
+    - if <entity[<context.args.get[1]>].location.find.players.within[35].get[3]||noplayer> == noplayer:
+        - define target <entity[<context.args.get[1]>].location.find.players.within[35].get[1]>
+        - define targetloc <[target].location>
+        - wait 2s
+    - else:
+        - define target <entity[<context.args.get[1]>].location.find.players.within[35].get[3]>
+        - define targetloc <[target].location>
+        
+    - announce <[target]>
+        
+    - while <[fire].distance[<[targetloc]>]> > 2:
+        - define fire <[fire].points_between[<[targetloc]>].get[2]>
+        - define targetloc <[target].location>
+        - playeffect effect:flame at:<[fire]> quantity:1 offset:0,0,0 visibility:40
+        - wait 2t
+        - playeffect effect:lava at:<[fire]> quantity:5 offset:0,0,0 visibility:40
+    - hurt <[target]> 5

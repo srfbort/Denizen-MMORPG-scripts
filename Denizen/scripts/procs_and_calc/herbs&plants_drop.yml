@@ -1,0 +1,66 @@
+herb_drop:
+  type: procedure
+  definitions: player
+  script:
+    - define alchlevel <[player].flag[alchemylevel]>
+    - if <[alchlevel]> < 15:
+      - define tier 1
+      - determine <proc[herb_dropchooser].context[<[tier]>]>
+    - else if <[alchlevel]> < 30:
+      - define tier 2
+    - else if <[alchlevel]> < 45:
+      - define tier 3
+    - else if <[alchlevel]> < 65:
+      - define tier 4
+    - else:
+      - define tier 5
+
+amountherbdrop:
+  type: procedure
+  definitions: player
+  script:
+    - define randomnumber <util.random.int[0].to[100]>
+    - if <[randomnumber]> < 60:
+      - determine 1
+    - else if <[randomnumber]> < 85:
+      - determine 2
+    - else:
+      - determine 3
+
+herbdropquantity:
+  type: procedure
+  definitions: player
+  script:
+    - define randomnumber <util.random.int[0].to[100]>
+    - if <[randomnumber]> < 60:
+      - determine 1
+    - else if <[randomnumber]> < 85:
+      - determine 2
+    - else:
+      - determine 3
+
+herb_dropchooser:
+  type: procedure
+  definitions: tier
+  script:
+    - choose <[tier]>:
+      - case 1:
+        - define drops:|:t1_cocoa|t1_sage|t1_rubisco|t1_lavender|t1_benifuuki|t1_root|t1_life_leaf
+        - define dropamount <proc[amountherbdrop]>
+        - repeat <[dropamount]>:
+          - define randomitem <[drops].random>
+          - define randomdroplist:->:<[randomitem]>
+          - define drops:<-:<[randomitem]>
+        - foreach <[randomdroplist].separated_by[|]>:
+          - define qty <proc[herbdropquantity]>
+          - define finaldrops:->:<item[<[value]>].with[quantity=<[qty]>]>
+        - determine <[finaldrops]>
+
+            
+      - case 2:
+
+      - case 3:
+
+      - case 4:
+
+      - case 5:

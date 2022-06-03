@@ -1,0 +1,52 @@
+heal_other_listing:
+    type: item
+    lv: 1
+    spelltype: bell
+    spell: heal_other
+    material: bell
+    mechanisms:
+        unbreakable: true
+    display name: Heal Other
+    lore:
+    - Heal someone else
+    enchantments:
+    - knockback:2
+
+heal_other:
+    type: task
+    script:
+        - define foreachskip 0
+        - define targetfound false
+        - foreach <player.eye_location.points_between[<player.eye_location.forward[25]>]>:
+            - define foreachskip:+:1
+            - if <[targetfound]> == false:
+                - playeffect effect:happy_villager at:<[value]> quantity:1 offset:0 visibility:35
+            - if <[foreachskip].mod[2]> == 0:
+                - wait 2t
+            - if <[value].find.players.within[5].exclude[<player>].size> > 0:
+                - define targetfound true
+                - define targets <[value].find.players.within[5].exclude[<player>]>
+                - define last <[value]>
+                - foreach stop
+
+        - if <[targets].size> > 0:
+            - foreach <[targets]>:
+                - define target <[value]>
+                - narrate <proc[target_check].context[<[target]>]>
+                - if <proc[target_check].context[<[target]>]> == friendlyplayer:
+                    - define friendlies:->:<[target]>
+                    - narrate friendly
+                - else:
+                    - narrate notfriendly
+
+            - define target <[friendlies].sort_by_number[health_percentage].get[1]>:
+            - narrate <[last].distance[<[target].eye_location>]>
+            - while <[last].distance[<[target].eye_location>]> > 1:
+                - define last <[last].points_between[<[target].eye_location>].get[2]>
+                - playeffect effect:happy_villager at:<[last]> quantity:1 offset:0 visibility:35
+                - narrate hi
+                - wait 1t
+            - playeffect effect:heart at:<[target].eye_location.with_y[<[target].eye_location.y.add[2]>]> quantity:5 offset:0.2,0.2,0.2gg visibility:35
+            - heal 100 <[target]> 
+        - else:
+            - narrate nonefound

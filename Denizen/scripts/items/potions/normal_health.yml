@@ -1,0 +1,114 @@
+t1_health:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: normal
+  taskname: normalpot_task
+  normalpottype: health
+  health_amount: 25
+  requiredmats: t1_root/2|t1_Life_Leaf/3|glass_Bottle/1
+  matcheckval: 3
+  level: 1
+  exp: 97
+  alchemylevel: 1
+  mechanisms:
+    nbt:
+      - itemid/265247445
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Potion of Health
+  lore:
+    - tier 1
+    - Potion with magical properties, heals you instantly.
+
+t2_health:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: normal
+  taskname: normalpot_task
+  normalpottype: health
+  health_amount: 25
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  level: 15
+  exp: 215
+  alchemylevel: 20
+  mechanisms:
+    nbt:
+      - itemid/265247445
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Potion of Health
+  lore:
+    - Tier<&co> 2
+    - Potion with magical properties, heals you instantly.
+
+t3_health:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: normal
+  taskname: normalpot_task
+  normalpottype: health
+  health_amount: 25
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  level: 30
+  exp: 280
+  alchemylevel: 30
+  mechanisms:
+    nbt:
+      - itemid/265247445
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Potion of Health
+  lore:
+    - Tier<&co> 3
+    - Potion with magical properties, heals you instantly.
+
+t4_health:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: normal
+  taskname: normalpot_task
+  normalpottype: health
+  health_amount: 25
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  level: 45
+  exp: 360
+  alchemylevel: 40
+  mechanisms:
+    nbt:
+      - itemid/265247445
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Potion of Health
+  lore:
+    - Tier<&co> 4
+    - Potion with magical properties, heals you instantly.
+
+t5_health:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: normal
+  taskname: normalpot_task
+  normalpottype: health
+  health_amount: 25
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  level: 65
+  exp: 600
+  alchemylevel: 60
+  mechanisms:
+    nbt:
+      - itemid/265247445
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Potion of Health
+  lore:
+    - Tier<&co> 5
+    - Potion with magical properties, heals you instantly.

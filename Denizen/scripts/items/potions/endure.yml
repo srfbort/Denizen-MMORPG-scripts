@@ -1,0 +1,129 @@
+t1_endure_buff:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: buff
+  taskname: buff_task
+  buffname: endure_buff
+  duration: 2s
+  level: 10
+  tier: 1
+  exp: 170
+  alchemylevel: 15
+  statbuffs: endurance:50
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  mechanisms:
+    nbt:
+      - itemid/23525
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Endure
+  lore:
+    - tier<&co><&sp>1
+    - Level<&co><&sp>1
+    - Increases endurance
+
+t2_endure_buff:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: buff
+  taskname: buff_task
+  buffname: endure_buff
+  duration: 2s
+  level: 15
+  tier: 2
+  exp: 280
+  alchemylevel: 30
+  statbuffs: endurance:50
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  mechanisms:
+    nbt:
+      - itemid/23525
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Endure
+  lore:
+    - tier<&co><&sp>2
+    - Level<&co><&sp>1
+    - Increases endurance
+
+t3_endure_buff:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: buff
+  taskname: buff_task
+  buffname: endure_buff
+  duration: 2s
+  level: 30
+  tier: 3
+  exp: 400
+  alchemylevel: 45
+  statbuffs: endurance:50
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  mechanisms:
+    nbt:
+      - itemid/23525
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Endure
+  lore:
+    - tier<&co><&sp>3
+    - Level<&co><&sp>1
+    - Increases endurance
+
+t4_endure_buff:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: buff
+  taskname: buff_task
+  buffname: endure_buff
+  duration: 2s
+  level: 45
+  tier: 4
+  exp: 550
+  alchemylevel: 55
+  statbuffs: endurance:50
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  mechanisms:
+    nbt:
+      - itemid/23525
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Endure
+  lore:
+    - tier<&co><&sp>4
+    - Level<&co><&sp>1
+    - Increases endurance
+
+t5_endure_buff:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: buff
+  taskname: buff_task
+  buffname: endure_buff
+  duration: 2s
+  level: 65
+  tier: 5
+  exp: 800
+  alchemylevel: 70
+  statbuffs: endurance:50
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  mechanisms:
+    nbt:
+      - itemid/23525
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Endure
+  lore:
+    - tier<&co><&sp>5
+    - Level<&co><&sp>1
+    - Increases endurance

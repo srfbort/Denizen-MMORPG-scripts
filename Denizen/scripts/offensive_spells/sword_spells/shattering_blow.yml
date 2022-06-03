@@ -1,0 +1,109 @@
+shattering_strike_listing:
+    type: item
+    lv: 15
+    skillpointlv: 10
+    levelflag: shatteringblowlevel
+    skillpointmax: 6
+    spelltype: sword
+    spell: shattering_strike
+    material: iron_sword
+    mechanisms:
+        unbreakable: true
+    display name: Shattering Strike
+    lore:
+    - A powerful attack that diminishes the targets defenses.
+    enchantments:
+    - knockback:2
+    hide:
+    - enchantments
+    
+shattering_strike:
+    type: task
+    script:
+    - if !<player.has_flag[shatteringblowlevel]>:
+        - flag player shatteringblowlevel:1
+    - foreach <player.location.forward[1].points_between[<player.location.forward[5]>]>:
+        - if <[value].find.living_entities.within[2].exclude[<player>].size> > 0:
+            - define targets <[value].find.living_entities.within[2].exclude[<player>]>
+            - define shatteringblowbonus:<player.flag[shatteringblowlevel].mul[.05]>
+            - foreach stop
+    - if <[targets].size> > 0:
+        - foreach <[targets]>:
+            - define target <[value]>
+            - playeffect effect:CRIT at:<[target].eye_location> quantity:15 offset:0.3,0.3,0.3 visibility:10
+            - playsound <[target].eye_location> sound:BLOCK_GLASS_BREAK volume:1
+            - run shattering_strike_defdebuff def:<[target]>
+            - run shattering_strike_damage def:<[target]>
+
+
+shattering_strike_damage:
+    type: task
+    speed: instant
+    definitions: target
+    script:
+        - define shatteringstrikebasedmg <player.flag[shatteringstrikelevel].mul[5].add[5]>
+        - define strscaling <proc[total_str].div[10]>
+        - define playerpdmg <proc[final_pdmg].div[2]>
+        - define shatteringstrikefinaldmg <[shatteringstrikebasedmg].add[<[strscaling]>].add[<[playerpdmg]>].round_down>
+        - choose <proc[target_check].context[<[target]>]>:
+                - case mythicmob:
+                    - define combined <[target].flag[pdef].add[<[shatteringstrikefinaldmg]>]>
+                    - define defreduc <[shatteringstrikefinaldmg].div[<[combined]>]>
+                    - define final <[shatteringstrikefinaldmg].mul[<[defreduc]>]>
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[final].round_to[0]> source:<player>
+                - case enemyplayer:
+                    - define combined <[target].flag[final_pdef].add[<[shatteringstrikefinaldmg]>]>
+                    - define defreduc <[shatteringstrikefinaldmg].div[<[combined]>]>
+                    - define final <[shatteringstrikefinaldmg].mul[<[defreduc]>]>
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[final].round_to[0]> source:<player>
+                - case regularmob:
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[shatteringstrikefinaldmg]> source:<player>
+
+shattering_strike_defdebuff:
+    type: task
+    definitions: target
+    speed: instant
+    script:
+        - choose <proc[target_check].context[<[target]>]>:
+            - case mythicmob:
+                - define mmdef <[target].flag[pdef]>
+                - define defreduc <[mmdef].mul[<player.flag[shatteringstrikelevel].mul[.05].add[.05]>]>
+                - define finaldef <[mmdef].sub[defreduc]>
+                - flag <[target]> pdef:-:<[defreduc]>
+                - narrate <[target].flag[pdef]>
+                - wait 10s
+                - flag <[target]> pdef:+:<[defreduc]>
+
+            - case enemyplayer:
+                - define target <[target]>
+                - narrate "running debuf script"
+                - define pdef <proc[target_final_pdef].context[<[target]>]>
+                - define defreduc <[pdef].mul[<player.flag[shatteringstrikelevel].mul[.05].add[.05]>]>
+                - if <[target].flag[debuffs].separated_by[|].contains_any[shatteringstrikedebuff]>:
+                    - define debuffdata <[target].flag[debuffs].get_sub_items[shatteringstrikedebuff].split_by[|]>
+                    - if <[debuffdata].after[/]> < <[defreduc]>:
+                        - narrate "new debuff is greater"
+                        - flag <[target]> pdef_debuff:-:<[debuffdata].after[/]>
+                        - flag <[target]> final_pdef:<proc[target_final_pdef].context[<[target]>]>
+                        - flag <[target]> debuffs:<-:<[debuffdata]>
+                        - flag <[target]> debuffed:true
+                        - flag <[target]> debuffs:->:shatteringstrikedebuff:pdef/<[defreduc]>
+                        - flag <[target]> shatteringstrikedebuff:true duration:10s
+                        - flag <[target]> pdef_Debuff:+:<[defreduc]>
+                        - flag <[target]> final_pdef:<proc[target_final_pdef].context[<[target]>]>
+                    - else:
+                        - narrate "debuff extended"
+                        - define currentexpiration <[target].flag[shatteringstrikedebuff].expiration>
+                        - flag <[target]> shatteringstrikedebuff:true duration:<[currentexpiration].add[5s]>
+                - else:
+                    - announce "please"
+                    - flag <[target]> debuffed:true
+                    - flag <[target]> debuffs:->:shatteringstrikedebuff<&co>pdef/<[defreduc]>
+                    - flag <[target]> shatteringstrikedebuff:true duration:10s
+                    - flag <[target]> pdef_Debuff:+:<[defreduc]>
+                    - flag <[target]> final_pdef:<proc[target_final_pdef].context[<[target]>]>
+                    - announce "<[target].name> pdef debuffed by <[defreduc]>"
+                    - announce "finalpdef: <[target].flag[final_pdef]> <proc[target_final_pdef].context[<[target]>]>"

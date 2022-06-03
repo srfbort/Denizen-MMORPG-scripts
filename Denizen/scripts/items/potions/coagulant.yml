@@ -1,0 +1,119 @@
+t1_coagulant:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: antidot
+  taskname: antidot_task
+  dottype: bleed
+  level: 15
+  tier: 1
+  exp: 200
+  alchemylevel: 20
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  mechanisms:
+    nbt:
+      - itemid/1
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Coagulant
+  lore:
+    - Tier<&co> 1
+    - Level<&co> 1
+    - Increases viscosity of blood, stopping any bleeding.
+
+t2_coagulant:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: antidot
+  taskname: antidot_task
+  dottype: bleed
+  level: 15
+  tier: 2
+  exp: 320
+  alchemylevel: 35
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  mechanisms:
+    nbt:
+      - itemid/1
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Coagulant
+  lore:
+    - Tier<&co> 2
+    - Level<&co> 15
+    - Increases viscosity of blood, stopping any bleeding.
+
+t3_coagulant:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: antidot
+  taskname: antidot_task
+  dottype: bleed
+  level: 30
+  tier: 3
+  exp: 450
+  alchemylevel: 50
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  mechanisms:
+    nbt:
+      - itemid/1
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Coagulant
+  lore:
+    - Tier<&co> 3
+    - Level<&co> 15
+    - Increases viscosity of blood, stopping any bleeding.
+
+t4_coagulant:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: antidot
+  taskname: antidot_task
+  dottype: bleed
+  level: 15
+  tier: 4
+  exp: 700
+  alchemylevel: 45
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  mechanisms:
+    nbt:
+      - itemid/1
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Coagulant
+  lore:
+    - Tier<&co> 4
+    - Level<&co> 15
+    - Increases viscosity of blood, stopping any bleeding.
+
+t5_coagulant:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: antidot
+  taskname: antidot_task
+  dottype: bleed
+  level: 65
+  tier: 5
+  exp: 950
+  alchemylevel: 80
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  mechanisms:
+    nbt:
+      - itemid/1
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Coagulant
+  lore:
+    - Tier<&co> 5
+    - Level<&co> 15
+    - Increases viscosity of blood, stopping any bleeding.

@@ -1,0 +1,47 @@
+buff_Task:
+    type: task
+    speed: instant
+    definitions: player|item
+    script:
+        - define buffname <[item].script.yaml_key[buffname]>
+        - define statbuffs <[item].script.yaml_key[statbuffs]>
+        - define tier <[item].script.yaml_key[tier]>
+        - define duration <[item].script.yaml_key[duration]>
+        - foreach <[player].flag[buffs]>:
+            - define buff <[value]>
+            - if <[buff].contains_any[<[buffname]>]>:
+                - define buffcheck <[buff]>
+
+        - if <[player].flag[buffs].separated_by[|].contains_any[<[buffname]>]>:
+            - define existingbuffstats <[buffcheck].after[/].before[\].replace[<&ns>].with[<&pipe>]>
+            - narrate "tiercheck <[tier]> to <[buffcheck].after[\]>"
+            - if <[tier]> >= <[buffcheck].after[\]>:
+                - foreach <[existingbuffstats]>:
+                    - define statname <[value].before[<&co>]>
+                    - define statvalue <[value].after[<&co>]>
+                    - flag <[player]> temp_<[statname]:-:<[statvalue]>
+                - foreach <[statbuffs]>:
+                    - define statname <[value].before[<&co>]>
+                    - define statvalue <[value].after[<&co>]>
+                    - flag <[player]> temp_<[statname]:+:<[statvalue]>
+                - flag <[player]> max_health:<proc[target_max_hp].context[<[player]>].round>
+                - adjust <[player]> max_health:<proc[target_max_hp].context[<[player]>].round>
+                - flag <[player]> max_mana:<proc[target_max_mp].context[<[player]>].round>
+                - flag <[player]> <[buffname]> duration:<[duration]>
+                - narrate "new buff is better than existing buff hand has been applied"
+            - else:
+                - narrate "Existing buff is better."
+        - else:
+            - flag <[player]> buffs:->:<[buffname]>/<[statbuffs]>\<[tier]>
+            - narrate <[player].flag[buffs]>
+            - foreach <[statbuffs].replace[<&ns>].with[<&pipe>]>:
+                - narrate <[value]>
+                - define statname <[value].before[<&co>]>
+                - define statvalue <[value].after[<&co>]>
+                - flag <[player]> temp_<[statname]>:+:<[statvalue]>
+            - flag <[player]> max_health:<proc[target_max_hp].context[<[player]>].round>
+            - adjust <[player]> max_health:<proc[target_max_hp].context[<[player]>].round>
+            - flag <[player]> max_mana:<proc[target_max_mp].context[<[player]>].round>
+            - flag <[player]> <[buffname]> duration:<[duration]>
+            - flag <[player]> buffed:true
+

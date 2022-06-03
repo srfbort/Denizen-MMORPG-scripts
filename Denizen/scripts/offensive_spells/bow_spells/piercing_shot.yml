@@ -1,0 +1,120 @@
+piercing_shot_listing:
+    type: item
+    lv: 1
+    skillpointlv: 10
+    levelflag: piercingshotlevel
+    skillpointmax: 6
+    spelltype: bow
+    spell: piercing_shot
+    material: bow
+    mechanisms:
+        unbreakable: true
+    display name: piercing Shot
+    lore:
+    - A deadly accurate piercing shot.
+    enchantments:
+    - knockback:2
+    hide:
+    - enchantments
+
+
+piercing_shot:
+    type: task
+    script:
+    - ratelimit <player> 10s
+    - narrate piercing
+    - if !<player.has_flag[piercingshotlevel]>:
+        - flag player piercingshotlevel:1
+    - else:
+    - if <player.flag[current_mana]> >= 5:
+        - flag player current_mana:-:5
+    - else:
+        - narrate "you don't have enough mana"
+        - determine cancelled
+
+    - define arrowpath <player.eye_location.points_between[<player.eye_location.forward[25]>]>
+    - playsound sound:ENTITY_ARROW_SHOOT at:<player.location>
+    - playeffect effect:crit at:<[arrowpath]> quantity:2 offset:0
+
+    - foreach <[arrowpath]>:
+        - define targets <[value].find.living_entities.within[2].exclude[<player>]>
+        - foreach <[targets]>:
+            - define target <[value]>
+            - if !<[target].flag[pshotrun].is_expired>:
+                - narrate nope
+            - else:
+                - flag <[target]> pshotrun:true duration:1s
+                - run piercing_shot_defdebuff def:<[target]>
+                - run piercing_shot_damage def:<[target]>
+
+piercing_shot_damage:
+    type: task
+    speed: instant
+    definitions: target
+    script:
+        - define piercingshotbasedmg <player.flag[piercingshotlevel].mul[5].add[10]>
+        - define strscaling <proc[total_str].div[10]>
+        - define playerpdmg <proc[total_pdmg].div[2]>
+        - define piercingshotfinaldmg <[piercingshotbasedmg].add[<[strscaling]>].add[<[playerpdmg]>].round_down>
+        - choose <proc[target_check].context[<[target]>]>:
+                - case mythicmob:
+                    - define combined <[target].flag[pdef].add[<[piercingshotfinaldmg]>]>
+                    - define defreduc <[piercingshotfinaldmg].div[<[combined]>]>
+                    - define final <[piercingshotfinaldmg].mul[<[defreduc]>]>
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[final].round_to[0]> source:<player>
+                - case enemyplayer:
+                    - define combined <[target].flag[final_pdef].add[<[piercingshotfinaldmg]>]>
+                    - define defreduc <[piercingshotfinaldmg].div[<[combined]>]>
+                    - define final <[piercingshotfinaldmg].mul[<[defreduc]>]>
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[final].round_to[0]> source:<player>
+                - case regularmob:
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[piercingshotfinaldmg]> source:<player>
+
+piercing_shot_defdebuff:
+    type: task
+    definitions: target
+    speed: instant
+    script:
+        - choose <proc[target_check].context[<[target]>]>:
+            - case mythicmob:
+                - define mmdef <[target].flag[pdef]>
+                - define defreduc <[mmdef].mul[<player.flag[piercingshotlevel].mul[.05].add[.05]>]>
+                - define finaldef <[mmdef].sub[defreduc]>
+                - flag <[target]> pdef:-:<[defreduc]>
+                - narrate <[target].flag[pdef]>
+                - wait 10s
+                - flag <[target]> pdef:+:<[defreduc]>
+
+            - case enemyplayer:
+                - define target <[target]>
+                - narrate "running debuf script"
+                - define pdef <proc[target_final_pdef].context[<[target]>]>
+                - define defreduc <[pdef].mul[<player.flag[piercingshotlevel].mul[.05].add[.05]>]>
+                - if <[target].flag[debuffs].separated_by[|].contains_any[piercingshotdebuff]>:
+                    - define debuffdata <[target].flag[debuffs].get_sub_items[piercingshotdebuff].split_by[|]>
+                    - if <[debuffdata].after[/]> < <[defreduc]>:
+                        - narrate "new debuff is greater"
+                        - flag <[target]> pdef_debuff:-:<[debuffdata].after[/]>
+                        - flag <[target]> final_pdef:<proc[target_final_pdef].context[<[target]>]>
+                        - flag <[target]> debuffs:<-:<[debuffdata]>
+                        - flag <[target]> debuffed:true
+                        - flag <[target]> debuffs:->:piercingshotdebuff:pdef/<[defreduc]>
+                        - flag <[target]> piercingshotdebuff:true duration:10s
+                        - flag <[target]> pdef_Debuff:+:<[defreduc]>
+                        - flag <[target]> final_pdef:<proc[target_final_pdef].context[<[target]>]>
+                    - else:
+                        - narrate "debuff extended"
+                        - define currentexpiration <[target].flag[piercingshotdebuff].expiration>
+                        - flag <[target]> piercingshotdebuff:true duration:<[currentexpiration].add[5s]>
+                - else:
+                    - announce "please"
+                    - flag <[target]> debuffed:true
+                    - flag <[target]> debuffs:->:piercingshotdebuff<&co>pdef/<[defreduc]>
+                    - flag <[target]> piercingshotdebuff:true duration:10s
+                    - flag <[target]> pdef_Debuff:+:<[defreduc]>
+                    - flag <[target]> final_pdef:<proc[target_final_pdef].context[<[target]>]>
+                    - announce "<[target].name> pdef debuffed by <[defreduc]>"
+                    - announce "finalpdef: <[target].flag[final_pdef]> <proc[target_final_pdef].context[<[target]>]>"

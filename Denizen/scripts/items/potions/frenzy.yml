@@ -1,0 +1,129 @@
+t1_frenzy_buff:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: buff
+  taskname: buff_task
+  buffname: frenzy_buff
+  duration: 2s
+  level: 15
+  tier: 1
+  exp: 200
+  alchemylevel: 20
+  statbuffs: strength:25#dexterity:25
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  mechanisms:
+    nbt:
+      - itemid/346345
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Frenzy
+  lore:
+    - Tier<&co> 1
+    - Level<&co> 1
+    - Increases strength and dexterity.
+
+t2_frenzy_buff:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: buff
+  taskname: buff_task
+  buffname: frenzy_buff
+  duration: 2s
+  level: 15
+  tier: 2
+  exp: 280
+  alchemylevel: 1
+  statbuffs: strength:25#dexterity:25
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  mechanisms:
+    nbt:
+      - itemid/346345
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Frenzy
+  lore:
+    - Tier<&co> 2
+    - Level<&co> 1
+    - Increases strength and dexterity.
+
+t3_frenzy_buff:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: buff
+  taskname: buff_task
+  buffname: frenzy_buff
+  duration: 2s
+  level: 30
+  tier: 3
+  exp: 400
+  alchemylevel: 45
+  statbuffs: strength:25#dexterity:25
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  mechanisms:
+    nbt:
+      - itemid/346345
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Frenzy
+  lore:
+    - Tier<&co> 3
+    - Level<&co> 1
+    - Increases strength and dexterity.
+
+t4_frenzy_buff:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: buff
+  taskname: buff_task
+  buffname: frenzy_buff
+  duration: 2s
+  level: 45
+  tier: 4
+  exp: 550
+  alchemylevel: 55
+  statbuffs: strength:25#dexterity:25
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  mechanisms:
+    nbt:
+      - itemid/346345
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Frenzy
+  lore:
+    - Tier<&co> 4
+    - Level<&co> 1
+    - Increases strength and dexterity.
+
+t5_frenzy_buff:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: buff
+  taskname: buff_task
+  buffname: frenzy_buff
+  duration: 2s
+  level: 65
+  tier: 5
+  exp: 800
+  alchemylevel: 75
+  statbuffs: strength:25#dexterity:25
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  mechanisms:
+    nbt:
+      - itemid/346345
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Frenzy
+  lore:
+    - Tier<&co> 5
+    - Level<&co> 1
+    - Increases strength and dexterity.

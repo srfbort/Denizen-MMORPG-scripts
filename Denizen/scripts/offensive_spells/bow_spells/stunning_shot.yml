@@ -1,0 +1,61 @@
+concussive_shot_listing:
+    type: item
+    lv: 1
+    spelltype: bow
+    spell: concussive_shot
+    material: bow
+    mechanisms:
+        unbreakable: true
+    display name: Concussive Shot
+    lore:
+    - A powerfully concussive shot.
+    enchantments:
+    - knockback:2
+    hide:
+    - enchantments
+
+
+concussive_shot:
+    type: task
+    script:
+    - ratelimit <player> 3s
+    - define concussive_shot_target_found false
+
+    - if !<player.has_flag[concussiveshotlevel]>:
+        - flag player concussiveshotlevel:1
+
+    - define concussiveshotbasedmg <player.flag[concussiveshotlevel].mul[5].add[10]>
+    - define strscaling <proc[total_str].div[10]>
+    - define playerpdmg <proc[total_pdmg].div[2]>
+    - define concussiveshotfinaldmg <[concussiveshotbasedmg].add[<[strscaling]>].add[<[playerpdmg]>].round_down>
+
+    - if <player.flag[current_mana]> >= 5:
+        - flag player current_mana:-:5
+    - else:
+        - narrate "you don't have enough mana"
+        - determine cancelled
+
+    - playsound sound:ENTITY_ARROW_SHOOT at:<player.location>
+    
+    - foreach <player.eye_location.points_between[<player.eye_location.forward[30]>]> as:arrow_location:
+        - if <[concussive_shot_target_found]> == false:
+            - playeffect effect:crit at:<[arrow_location]> quantity:5 offset:0,0,0 visibility:65
+            - if <[arrow_location].find.living_entities.within[2].exclude[<player>].size> > 0:
+                - define targets <[arrow_location].find.living_entities.within[2].exclude[<player>]>
+                - foreach <[targets]>:
+                    - define target <[value]>
+                    - choose <proc[target_check].context[<[target]>]>:
+                        - case mythicmob:
+                            - narrate mythicmob
+                        - case enemyplayer:
+                            - narrate enemyplayer
+                        - case regularmob:
+                            - narrate regularmob
+                        - case friendlyplayer:
+                            - narrate friendlyplayer
+        - else:
+            - foreach stop
+
+    - define concussive_shot_target_found true
+
+

@@ -1,0 +1,22 @@
+irresistable_pull_listing:
+    type: item
+    spelltype: wand
+    spell: irresistable_pull
+    lv: 1
+    material: book
+    mechanisms:
+        unbreakable: true
+    display name: Irresistable Pull
+    lore:
+    - Your magic will not be denied. Impose your will on your enemies.
+    enchantments:
+    - knockback:2
+        
+irresistable_pull:
+    type: task
+    script:
+    - define targets <player.location.find.living_entities.within[8].exclude[<player>]>
+    - foreach <[targets]>:
+      - define vector <[value].location.face[<player.location>]>
+      - narrate <[vector].direction.vector>
+      - adjust <[value]> velocity:<[vector].direction.vector.mul[2].with_y[<[vector].direction.vector.y.sub[1]>]>

@@ -1,0 +1,21 @@
+regenerate_listing:
+    type: item
+    lv: 1
+    spelltype: bell
+    spell: regenerate
+    material: bell
+    mechanisms:
+        unbreakable: true
+    display name: Regenerate
+    lore:
+    - Heal urself?
+    enchantments:
+    - knockback:2
+    hide:
+    - enchantments
+
+regenerate:
+    type: task
+    script:
+    - ratelimit <player> 3s
+    - heal <player> 5

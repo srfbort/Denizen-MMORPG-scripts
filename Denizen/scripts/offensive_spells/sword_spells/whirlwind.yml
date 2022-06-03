@@ -1,0 +1,72 @@
+whirlwind_listing:
+    type: item
+    lv: 15
+    skillpointlv: 10
+    levelflag: whirlwindlevel
+    skillpointmax: 6
+    spelltype: sword
+    spell: whirlwind
+    material: iron_sword
+    mechanisms:
+        unbreakable: true
+    display name: Whirlwind
+    lore:
+    - Spinning slash attack.
+    enchantments:
+    - knockback:2
+    hide:
+    - enchantments
+    
+whirlwind:
+    type: task
+    script:
+    - if !<player.has_flag[whirlwindlevel]>:
+        - flag player whirlwindlevel:1
+    - define width 5
+    - define particlelocation 0.5
+    - define Density 12
+    - define fineness 4
+    - define effect crit
+    - define lengthdensity 0.6
+    - repeat <element[360].div[<[density]>]>:
+        - define Loc <player.eye_location.forward_flat[0].with_y[<player.eye_location.y.sub[<[particlelocation]>]>]>
+        - define Angle <location[0,0,<[width]>].rotate_around_y[<[value].to_radians.mul[<[Density]>]>]>
+        - if <[value].mod[<[fineness]>]> == 0:
+            - foreach <[loc].points_between[<[Loc].add[<[Angle]>]>].distance[<[lengthdensity]>].exclude[<[loc]>]>:
+                - foreach <[value].find.living_entities.within[2].exclude[<player>]>:
+                    - define target <[value]>
+                    - if <[value].flag[<player.name>_whirlwind].is_expired>:
+                        - flag <[value]> <player.name>_whirlwind:true duration:1s
+                        - run whirlwind_damage def:<[target]>
+
+            - wait 1t
+        
+        - playeffect effect:<[effect]> at:<[loc].points_between[<[Loc].add[<[Angle]>]>].distance[<[lengthdensity]>].exclude[<[loc]>]> quantity:1 offset:0
+        
+
+    
+whirlwind_damage:
+    type: task
+    speed: instant
+    definitions: target
+    script:
+        - define whirlwindbasedmg <player.flag[whirlwindlevel].mul[5].add[5]>
+        - define strscaling <proc[total_str].div[10]>
+        - define playerpdmg <proc[final_pdmg].div[2]>
+        - define whirlwindfinaldmg <[whirlwindbasedmg].add[<[strscaling]>].add[<[playerpdmg]>].round_down>
+        - choose <proc[target_check].context[<[target]>]>:
+                - case mythicmob:
+                    - define combined <[target].flag[pdef].add[<[whirlwindfinaldmg]>]>
+                    - define defreduc <[whirlwindfinaldmg].div[<[combined]>]>
+                    - define final <[whirlwindfinaldmg].mul[<[defreduc]>]>
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[final].round_to[0]> source:<player>
+                - case enemyplayer:
+                    - define combined <[target].flag[final_pdef].add[<[whirlwindfinaldmg]>]>
+                    - define defreduc <[whirlwindfinaldmg].div[<[combined]>]>
+                    - define final <[whirlwindfinaldmg].mul[<[defreduc]>]>
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[final].round_to[0]> source:<player>
+                - case regularmob:
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[whirlwindfinaldmg]> source:<player>

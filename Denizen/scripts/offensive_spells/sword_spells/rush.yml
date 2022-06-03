@@ -1,0 +1,69 @@
+rush_listing:
+    type: item
+    lv: 10
+    skillpointlv: 10
+    levelflag: rushlevel
+    skillpointmax: 6
+    spelltype: sword
+    spell: rush
+    material: iron_sword
+    mechanisms:
+        unbreakable: true
+    display name: Rush
+    lore:
+    - You're gonna like this one
+    enchantments:
+    - knockback:2
+    hide:
+    - enchantments
+    
+rush:
+    type: task
+    script:
+    - if !<player.has_flag[rushlevel]>:
+        - flag player rushlevel:1
+    - adjust <player> velocity:<player.location.direction.vector.mul[2.5].with_y[0]>
+    - define left <player.eye_location.left[2]>
+    - define right <player.eye_location.right[2]>
+    - repeat 15:
+        - playeffect effect:crit at:<[value]> quantity:5 visibility:16 offset:0,0,0
+        - playeffect effect:crit at:<player.eye_location.left[2]> quantity:5 visibility:16 offset:0,0,0
+        - playeffect effect:crit at:<player.eye_location.left[2].points_between[<player.eye_location.forward_flat[2]>]> quantity:5 visibility:16 offset:0,0,0
+        - playeffect effect:crit at:<player.eye_location.right[2]> quantity:5 visibility:16 offset:0,0,0
+        - playeffect effect:crit at:<player.eye_location.right[2].points_between[<player.eye_location.forward_flat[2]>]> quantity:5 visibility:16 offset:0,0,0
+        - foreach <player.eye_location.right[2].points_between[<player.eye_location.left[2]>]>:
+            - define target <[value].find.living_entities.within[2].exclude[<player>].get[1]||null>
+            - if <[target]> != null:
+                - run rush_damage def:<[target]>
+            - else:
+                - foreach next
+        - wait 1t
+    
+    
+rush_damage:
+    type: task
+    speed: instant
+    definitions: target
+    script:
+        - define rushbasedmg <player.flag[rushlevel].mul[5].add[5]>
+        - define strscaling <proc[total_str].div[10]>
+        - define playerpdmg <proc[final_pdmg].div[2]>
+        - define rushfinaldmg <[rushbasedmg].add[<[strscaling]>].add[<[playerpdmg]>].round_down>
+        - choose <proc[target_check].context[<[target]>]>:
+                - case mythicmob:
+                    - define combined <[target].flag[pdef].add[<[rushfinaldmg]>]>
+                    - define defreduc <[rushfinaldmg].div[<[combined]>]>
+                    - define final <[rushfinaldmg].mul[<[defreduc]>]>
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[final].round_to[0]> source:<player>
+                - case enemyplayer:
+                    - define combined <[target].flag[final_pdef].add[<[rushfinaldmg]>]>
+                    - define defreduc <[rushfinaldmg].div[<[combined]>]>
+                    - define final <[rushfinaldmg].mul[<[defreduc]>]>
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[final].round_to[0]> source:<player>
+                - case regularmob:
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[rushfinaldmg]> source:<player>
+                - case friendlyplayer:
+                    - narrate friendly

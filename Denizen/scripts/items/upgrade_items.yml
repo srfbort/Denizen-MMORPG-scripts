@@ -1,0 +1,75 @@
+itemprotection:
+    type: world
+    events:
+        on player places block:
+        - if <player.item_in_hand.has_nbt[itemid]>:
+            - determine cancelled
+
+
+power_stone:
+    type: item
+    material: sunflower
+    mechanisms:
+        nbt:
+            - itemid/23094723049724242097
+            - lorecolor/<&f>
+            - statcolor/<&f>
+    display name: <&e>Stone of Power
+    itemtype: upgradestone
+    upgradetier: 1
+    lore:
+    - <&7>Tier<&co> 1
+    - Used in upgrading equipment.
+    recipes:
+        1:
+            type: shapeless
+            output_quantity: 1
+            input: lesser_soul|enhancement_powder|lesser_vessel_stone
+    
+upgrade_powder:
+    type: item
+    material: gray_dye
+    mechanisms:
+        nbt:
+            - itemid/23590972309247234
+            - lorecolor/<&f>
+            - statcolor/<&f>
+    display name: <&e>Upgrade Powder
+    itemtype: upgradebonus
+    successbonus: 150
+    lore:
+    - <&7>Tier<&co> 1
+    - Makes upgrading equipment easier. Blacksmiths love this stuff.
+    
+lesser_soul:
+    type: item
+    material: lantern
+    mechanisms:
+        nbt:
+            - itemid/12349ca4094
+    display name: <&e>Lesser Soul
+    lore:
+    - Harnessed life essence of the fallen.
+    - Useful for crafting various things.
+    
+enhancement_powder:
+    type: item
+    material: redstone
+    mechanisms:
+        nbt:
+            - itemid/lkn231lkh315o1ih
+    display name: <&e>Enhancement Powder
+    lore:
+    - Multiplies the existing power of a substance.
+    - Useful for crafting various things.
+    
+lesser_vessel_stone:
+    type: item
+    material: sunflower
+    mechanisms:
+        nbt:
+            - itemid/asklnoihe123513aqwe
+    display name: <&e>Lesser Vessel Stone
+    lore:
+    - An empty power stone.
+    - Can be filled with power.

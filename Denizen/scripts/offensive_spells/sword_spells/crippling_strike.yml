@@ -1,0 +1,77 @@
+crippling_strike_listing:
+    type: item
+    lv: 15
+    skillpointlv: 10
+    levelflag: cripplingstrikelevel
+    skillpointmax: 6
+    spelltype: sword
+    spell: crippling_strike
+    material: iron_sword
+    mechanisms:
+        unbreakable: true
+    display name: crippling Strike
+    lore:
+    - A powerful attack aimed at the legs, inhibits the enemies movement.
+    enchantments:
+    - knockback:2
+    hide:
+    - enchantments
+    
+crippling_strike:
+    type: task
+    script:
+    - if !<player.has_flag[cripplingstrikelevel]>:
+        - flag player cripplingstrikelevel:1
+    - foreach <player.location.forward[1].points_between[<player.location.forward[5]>].distance[0.5]>:
+        - if <[value].find.living_entities.within[1].exclude[<player>].size> > 0:
+            - define targets <[value].find.living_entities.within[1].exclude[<player>]>
+            - foreach <[targets]>:
+                - define target <[value]>
+                - playeffect effect:CRIT at:<[target].location> quantity:5 offset:1,1,1 visibility:10
+                - playsound <[target].location> sound:BLOCK_GLASS_BREAK volume:1
+                - run crippling_strike_slow def:<[target]>
+                - run crippling_strike_damage def:<[target]>
+
+crippling_strike_damage:
+    type: procedure
+    definitions: target
+    script:
+        - define cripplingstrikebasedmg <player.flag[cripplingstrikelevel].mul[5].add[5]>
+        - define strscaling <proc[total_str].div[10]>
+        - define playerpdmg <proc[final_pdmg].div[2]>
+        - define cripplingstrikefinaldmg <[cripplingstrikebasedmg].add[<[strscaling]>].add[<[playerpdmg]>].round_down>
+        - choose <proc[target_check].context[<[target]>]>:
+                - case mythicmob:
+                    - define combined <[target].flag[pdef].add[<[cripplingstrikefinaldmg]>]>
+                    - define defreduc <[cripplingstrikefinaldmg].div[<[combined]>]>
+                    - define final <[cripplingstrikefinaldmg].mul[<[defreduc]>]>
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[final].round_to[0]> source:<player>
+                - case enemyplayer:
+                    - define combined <[target].flag[final_pdef].add[<[cripplingstrikefinaldmg]>]>
+                    - define defreduc <[cripplingstrikefinaldmg].div[<[combined]>]>
+                    - define final <[cripplingstrikefinaldmg].mul[<[defreduc]>]>
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[final].round_to[0]> source:<player>
+                - case regularmob:
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[cripplingstrikefinaldmg]> source:<player>
+
+crippling_strike_slow:
+    type: task
+    speed: instant
+    definitions: target
+    script:
+    - choose <proc[target_check].context[<[target]>]>:
+        - case mythicmob:
+            - adjust <[target]> Speed:0.1
+            - wait 5s
+            - adjust <[target]> Speed:0.2
+        - case enemyplayer:
+            - adjust <[target]> walk_Speed:0.1
+            - wait 5s
+            - adjust <[target]> walk_Speed:0.2
+        - case regularmob:
+            - adjust <[target]> Speed:0.1
+            - wait 5s
+            - adjust <[target]> Speed:0.2

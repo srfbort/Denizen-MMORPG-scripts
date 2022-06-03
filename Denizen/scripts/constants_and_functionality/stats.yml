@@ -1,0 +1,102 @@
+stats:
+    type: world
+    debug: false
+    events:
+        on player join:
+        - announce <player>
+        #create/load new player default stats&class
+        - if !<player.has_flag[established_player]>:
+            - flag <player> alchemylevel:1
+            - inventory set slot:40 o:<item[helmetslotholder]>
+            - inventory set slot:39 o:book
+            - inventory set slot:38 o:red_Stained_glass_pane
+            - inventory set slot:37 o:red_Stained_glass_pane
+            - flag <player> equip_menu2_pickeditemid:reset
+            - flag <player> party_players_in:none
+            - flag <player> player_in_party:false
+            - flag <player> class:Wanderer
+            - flag <player> max_health:20
+            - flag <player> max_mana:10
+            - flag <player> current_mana:10
+            - flag <player> mana_regeneration_base:1
+            - flag <player> intelligence:0
+            - flag <player> endurance:0
+            - flag <player> strength:0
+            - flag <player> dexterity:0
+            - flag <player> spirit:0
+            - flag <player> crit_chance:10
+            - flag <player> stat_points:0
+            - flag <player> established_player:true
+            - flag <player> level:1
+            - flag <player> experience:0
+            - flag <player> cooldown_reduction:1
+            - flag <player> bonus_health:0
+            - flag <player> bonus_mana:0
+            - flag <player> bonus_mana_regeneration:0
+            - flag <player> bonus_intelligence:0
+            - flag <player> bonus_endurance:0
+            - flag <player> bonus_strength:0
+            - flag <player> bonus_dexterity:0
+            - flag <player> bonus_spirit:0
+            - flag <player> bonus_crit_chance:0
+            - flag <player> base_phys_dmg:0
+            - flag <player> base_mdmg:0
+            - flag <player> base_phys_def:0
+            - flag <player> base_mdef:0
+            - flag <player> temp_intelligence:0
+            - flag <player> temp_endurance:0
+            - flag <player> temp_strength:0
+            - flag <player> temp_dexterity:0
+            - flag <player> temp_spirit:0
+            - flag <player> temp_crit:0
+            - flag <player> bonus_crit:0
+            - flag <player> total_pdmg:0
+            - flag <player> total_mdmg:0
+            - flag <player> total_pdef:0
+            - flag <player> total_mdef:0
+            - flag <player> bonus_pdmg:0
+            - flag <player> bonus_mdmg:0
+            - flag <player> bonus_pdef:0
+            - flag <player> bonus_mdef:0
+            - flag <player> temp_pdmg:0
+            - flag <player> temp_mdmg:0
+            - flag <player> temp_pdef:0
+            - flag <player> temp_mdef:0
+            - flag <player> final_pdef:0
+            - flag <player> final_mdef:0
+            - flag <player> final_pdmg:0
+            - flag <player> final_mdmg:0
+            - flag <player> active_temp_buffs
+            - flag <player> helmet:<i@air>
+            - flag <player> ear1:<i@air>
+            - flag <player> ear2:<i@air>
+            - flag <player> lefthand:<i@air>
+            - flag <player> chest:<i@air>
+            - flag <player> righthand:<i@air>
+            - flag <player> ring1:i@air
+            - flag <player> ring2:i@air
+            - flag <player> legs:<i@air>
+            - flag <player> boots:<i@air>
+            - flag <player> equip_menu2_pickeditemid:reset
+            - note <inventory[equip_menu2]> as:<player.uuid>_knight_equipmentinv
+            - note <inventory[equip_menu2]> as:<player.uuid>_wizard_equipmentinv
+            - note <inventory[equip_menu2]> as:<player.uuid>_archer_equipmentinv
+            - note <inventory[equip_menu2]> as:<player.uuid>_divinist_equipmentinv
+            - note <inventory[equip_menu2]> as:<player.uuid>_wanderer_equipmentinv
+            - flag player partyinvitepending:true duration:5s
+            
+            - yaml create id:<player.uuid>_data
+            - yaml "load:class_data/<player.uuid>_data.yml" id:<player.uuid>_data
+            - yaml id:<player.uuid>_data set <player.flag[class]>_data:|:max_health:<player.flag[max_health]>|max_mana:<player.flag[max_mana]>|current_mana:<player.flag[current_mana]>|mana_regeneration_base:<player.flag[mana_regeneration_base]>|intelligence:<player.flag[intelligence]>|endurance:<player.flag[endurance]>|strength:<player.flag[strength]>|dexterity:<player.flag[dexterity]>|spirit:<player.flag[spirit]>|crit_chance:<player.flag[crit_chance]>|stat_points:<player.flag[stat_points]>|level:<player.flag[level]>|experience:<player.flag[experience]>|bonus_health:<player.flag[bonus_health]>|bonus_mana:<player.flag[bonus_mana]>|bonus_mana_regeneration:<player.flag[bonus_mana_regeneration]>|bonus_intelligence:<player.flag[bonus_intelligence]>|bonus_endurance:<player.flag[bonus_endurance]>|bonus_strength:<player.flag[bonus_strength]>|bonus_dexterity:<player.flag[bonus_dexterity]>|bonus_spirit:<player.flag[bonus_spirit]>|bonus_crit_chance:<player.flag[bonus_crit_chance]>|helmet:<player.flag[helmet]>|ear1:<player.flag[ear1]>|ear2:<player.flag[ear2]>|lefthand:<player.flag[lefthand]>|chest:<player.flag[chest]>|righthand:<player.flag[righthand]>|ring1:<player.flag[ring1]>|legs:<player.flag[legs]>|ring2:<player.flag[ring2]>|boots:<player.flag[boots]>
+            - yaml "savefile:class_data/<player.uuid>_data.yml" id:<player.uuid>_data
+        - else:
+            - yaml "load:class_data/<player.uuid>_data.yml" id:<player.uuid>_data
+            
+        on player closes inventory:
+        - flag player final_pdmg:<proc[final_pdmg]>
+        - flag player final_mdmg:<proc[final_mdmg]>
+        - flag player final_pdef:<proc[final_pdef]>
+        - flag player final_mdef:<proc[final_mdef]>
+            
+    
+        

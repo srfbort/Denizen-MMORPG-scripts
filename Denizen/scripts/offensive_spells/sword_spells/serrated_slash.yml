@@ -1,0 +1,100 @@
+serrated_slash_listing:
+    type: item
+    lv: 15
+    skillpointlv: 10
+    levelflag: serratedslashlevel
+    skillpointmax: 6
+    spelltype: sword
+    spell: serrated_slash
+    material: iron_sword
+    mechanisms:
+        unbreakable: true
+    display name: Serrated Slash
+    lore:
+    - A powerful attack that diminishes the targets defenses.
+    enchantments:
+    - knockback:2
+    hide:
+    - enchantments
+    
+serrated_slash:
+    type: task
+    script:
+    - if !<player.has_flag[serratedslashlevel]>:
+        - flag player serratedslashlevel:1
+
+    - foreach <player.location.forward[1].points_between[<player.location.forward[5]>].distance[0.5]>:
+        - if <[value].find.living_entities.within[1].exclude[<player>].size> > 0:
+            - define targets <[value].find.living_entities.within[1].exclude[<player>]>
+            - foreach <[targets].deduplicate>:
+                - define target <[value]>
+                - narrate <[target]>
+                - if <[target].is_mythicmob>:
+                    - narrate mythicmob
+                - else if <[target].is_player>:
+                    - if !<[target].has_flag[<player.name>_serratedslash]>:
+                        - flag <[target]> <player.name>_Serratedslash:true duration:2s
+                        - run serrated_slash_damage def:<[target]>
+                        - playeffect effect:crit at:<[target].eye_location> quantity:5 offset:0.3,0.3,0.3 visibility:10
+                        - run serrated_slash_dot def:<[target]>
+        - else:
+            - foreach next
+
+
+serrated_slash_damage:
+    type: task
+    speed: instant
+    definitions: target
+    script:
+        - define serratedslashbasedmg <player.flag[serratedslashlevel].mul[5].add[5]>
+        - define strscaling <proc[total_str].div[10]>
+        - define playerpdmg <proc[final_pdmg].div[2]>
+        - define serratedslashfinaldmg <[serratedslashbasedmg].add[<[strscaling]>].add[<[playerpdmg]>].round_down>
+        - choose <proc[target_check].context[<[target]>]>:
+                - case mythicmob:
+                    - define combined <[target].flag[pdef].add[<[serratedslashfinaldmg]>]>
+                    - define defreduc <[serratedslashfinaldmg].div[<[combined]>]>
+                    - define final <[serratedslashfinaldmg].mul[<[defreduc]>]>
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[final].round_to[0]> source:<player>
+                - case enemyplayer:
+                    - define combined <[target].flag[final_pdef].add[<[serratedslashfinaldmg]>]>
+                    - define defreduc <[serratedslashfinaldmg].div[<[combined]>]>
+                    - define final <[serratedslashfinaldmg].mul[<[defreduc]>]>
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[final].round_to[0]> source:<player>
+                - case regularmob:
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[serratedslashfinaldmg]> source:<player>
+
+serrated_Slash_dot:
+    type: task
+    definitions: target
+    speed: instant
+    script:
+        - choose <proc[target_check].context[<[target]>]>:
+            - case mythicmob:
+
+            - case enemyplayer:
+                - narrate "running ssdot script"
+                - define dexscaling <proc[total_dex].div[20]>
+                - define pdmg <proc[final_pdmg].div[10]>
+                - define serratedslashlevel <player.flag[serratedslashlevel].mul[2]>
+                - define final <[dexscaling].add[<[pdmg]>].add[<[serratedslashlevel]>].round_down>
+                - narrate <[final]>
+                - if <[target].flag[dots].separated_by[|].contains_any[serratedslashdot]>:
+                    - define dotdata <[target].flag[dots].get_sub_items[serratedslashdot].split_by[|]>
+                    - if <[dotdata].after[<&co>].before[/]> < <[final]>:
+                        - flag <[target]> dots:<-:<[dotdata]>
+                        - flag <[target]> dotted:true
+                        - flag <[target]> dots:->:serratedslashdot<&co><[final]>/bleed\<player.name><&ns><player.flag[serratedslashlevel]>
+                        - flag <[target]> serratedslashdot:true duration:5s
+                    - else:
+                        - narrate "dot extended"
+                        - define currentexpiration <[target].flag[serratedslashdot].expiration>
+                        - flag <[target]> serratedslashdot:true duration:<[currentexpiration].add[5s]>
+                - else:
+                    - flag <[target]> dotted:true
+                    - flag <[target]> dots:->:serratedslashdot<&co><[final]>/bleed\<player.name><&ns><player.flag[serratedslashlevel]>
+                    - flag <[target]> serratedslashdot:true duration:15s
+                    - announce "<[target].name> pdef dotted by <player.name>"

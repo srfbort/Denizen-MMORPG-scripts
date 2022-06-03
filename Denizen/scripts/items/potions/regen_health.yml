@@ -1,0 +1,129 @@
+t1_health_regen:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: regen
+  tier: 1
+  taskname: regenpot_task
+  regenpottype: health
+  regenname: Health_regen
+  regenamount: 1
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  duration: 10s
+  level: 15
+  exp: 140
+  alchemylevel: 10
+  mechanisms:
+    nbt:
+      - itemid/265247445
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Health Regeneration Potion
+  lore:
+    - tier 1
+    - Potion with magical properties, continuously heals you for a time.
+
+t2_health_regen:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: regen
+  tier: 2
+  taskname: regenpot_task
+  regenpottype: health
+  regenname: Health_regen
+  regenamount: 5
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  duration: 5s
+  level: 15
+  exp: 250
+  alchemylevel: 25
+  mechanisms:
+    nbt:
+      - itemid/265247445
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Health Regeneration Potion
+  lore:
+    - tier 2
+    - Potion with magical properties, continuously heals you for a time.
+
+t3_health_regen:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: regen
+  tier: 3
+  taskname: regenpot_task
+  regenpottype: health
+  regenname: Health_regen
+  regenamount: 10
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  duration: 5s
+  level: 30
+  exp: 360
+  alchemylevel: 40
+  mechanisms:
+    nbt:
+      - itemid/265247445
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Health Regeneration Potion
+  lore:
+    - tier 3
+    - Potion with magical properties, continuously heals you for a time.
+
+t4_health_regen:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: regen
+  tier: 4
+  taskname: regenpot_task
+  regenpottype: health
+  regenname: Health_regen
+  regenamount: 15
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  duration: 5s
+  level: 45
+  exp: 500
+  alchemylevel: 55
+  mechanisms:
+    nbt:
+      - itemid/265247445
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Health Regeneration Potion
+  lore:
+    - tier 4
+    - Potion with magical properties, continuously heals you for a time.
+
+t5_health_regen:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: regen
+  tier: 5
+  taskname: regenpot_task
+  regenpottype: health
+  regenname: Health_regen
+  regenamount: 20
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  duration: 5s
+  level: 65
+  exp: 750
+  alchemylevel: 70
+  mechanisms:
+    nbt:
+      - itemid/265247445
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Health Regeneration Potion
+  lore:
+    - tier 5
+    - Potion with magical properties, continuously heals you for a time.

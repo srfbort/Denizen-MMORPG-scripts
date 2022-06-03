@@ -1,0 +1,226 @@
+normalpotion_menu:
+    type: inventory
+    title: "clicky"
+    size: 27
+    slots:
+    - "[health_potion_menu] [mana_potion_menu] [craft_potion_menu] [tierdown] [current_tier] [tierup] [craft_potion_menu] [health_regen_potion_menu] [mana_regen_potion_menu]"
+    - "[frenzy_potion_menu] [endure_potion_menu] [coagulant_potion_menu] [quantity_down] [current_quantity] [quantity_up] [] [] []"
+    - "[wisen_potion_menu] [Atone_potion_menu] [antidote_potion_menu] [quantity_increment_down] [current_quantity_increment] [quantity_increment_up] [] [] []"
+
+tierup:
+  type: item
+  material: red_stained_glass_pane
+  display name: Increase Tier
+
+current_tier:
+  type: item
+  material: black_stained_glass_pane
+  display name: Current Tier
+
+tierdown:
+  type: item
+  material: red_stained_glass_pane
+  display name: Decrease Tier
+
+quantity_increment_up:
+  type: item
+  material: red_stained_glass_pane
+  display name: Increase Quantity increment
+
+current_quantity_increment:
+  type: item
+  material: black_stained_glass_pane
+  display name: Current Quantity increment
+
+quantity_increment_down:
+  type: item
+  material: red_stained_glass_pane
+  display name: Decrease Quantity increment
+
+quantity_up:
+  type: item
+  material: red_stained_glass_pane
+  display name: Increase Quantity
+
+current_quantity:
+  type: item
+  material: black_stained_glass_pane
+  display name: Current Quantity
+
+quantity_down:
+  type: item
+  material: red_stained_glass_pane
+  display name: Decrease Quantity
+
+health_potion_menu:
+  type: item
+  material: glass_bottle
+  display name: Health Potion
+  menuitemtype: potion
+  potiontocraft: health
+
+mana_potion_menu:
+  type: item
+  material: glass_bottle
+  display name: Mana Potion
+  potiontocraft: mana
+  menuitemtype: potion
+
+health_regen_potion_menu:
+  type: item
+  material: glass_bottle
+  display name: Health Regeneration Potion
+  potiontocraft: health_regen
+  menuitemtype: potion
+
+mana_regen_potion_menu:
+  type: item
+  material: glass_bottle
+  display name: Mana Regeneration Potion
+  potiontocraft: mana_regen
+  menuitemtype: potion
+
+frenzy_potion_menu:
+  type: item
+  material: glass_bottle
+  display name: Frenzy
+  potiontocraft: frenzy_buff
+  menuitemtype: potion
+
+endure_potion_menu:
+  type: item
+  material: glass_bottle
+  display name: Endure
+  potiontocraft: endure_buff
+  menuitemtype: potion
+
+wisen_potion_menu:
+  type: item
+  material: glass_bottle
+  display name: Wisen
+  potiontocraft: wisen_buff
+  menuitemtype: potion
+
+Atone_potion_menu:
+  type: item
+  material: glass_bottle
+  display name: Atone
+  potiontocraft: atone_buff
+  menuitemtype: potion
+
+Antidote_potion_menu:
+  type: item
+  material: glass_bottle
+  display name: Antidote
+  potiontocraft: antidote
+  menuitemtype: potion
+
+coagulant_potion_menu:
+  type: item
+  material: glass_bottle
+  display name: Coagulant
+  potiontocraft: coagulant
+  menuitemtype: potion
+
+craft_potion_menu:
+  type: item
+  material: green_Stained_glass_pane
+  display name: Craft Item
+
+normalpotion_menu_handler:
+  type: world
+  events:
+    on player opens inventory:
+      - if <context.inventory.script.name> == normalpotion_menu:
+        - flag player craftingtier:1
+        - flag player craftingquantity_increment:1
+        - flag player craftingquantity:1
+        - flag player potion_craft_check:!
+        - flag <player> potiontocraft:!
+    on player clicks in inventory:
+      - if <context.clicked_inventory.script.name> == normalpotion_menu:
+        - determine passively cancelled
+        - ratelimit <player> 5t
+        - if <context.item.script.yaml_key[menuitemtype]> == potion:
+          - define potiontocraft t<player.flag[craftingtier]>_<context.item.script.yaml_key[potiontocraft]>
+          - flag <player> potiontocraft:<[potiontocraft]>
+          - narrate "<[potiontocraft].replace[_].with[<&sp>]> selected for crafting."
+        - choose <context.item.script.name>:
+          - case tierup:
+            - if <player.flag[craftingtier]> < 4:
+              - flag player craftingtier:+:1
+              - inventory adjust slot:5 display_name:Current<&sp>Tier<&co><&sp><player.flag[craftingtier]> destination:<context.clicked_inventory>
+              - inventory adjust slot:5 quantity:<player.flag[craftingtier]> destination:<context.clicked_inventory>
+            - else:
+              - narrate "There is no higher tier."
+          - case tierdown:
+            - if <player.flag[craftingtier]> > 1:
+              - flag player craftingtier:-:1
+              - inventory adjust slot:5 display_name:Current<&sp>Tier<&co><&sp><player.flag[craftingtier]> destination:<context.clicked_inventory>
+              - inventory adjust slot:5 quantity:<player.flag[craftingtier]> destination:<context.clicked_inventory>
+          - case quantity_up:
+            - flag player craftingquantity:+:<player.flag[craftingquantity_increment]>
+            - inventory adjust slot:14 display_name:Current<&sp>Quantity<&co><&sp><player.flag[craftingquantity]> destination:<context.clicked_inventory>
+            - inventory adjust slot:14 quantity:<player.flag[craftingquantity]> destination:<context.clicked_inventory>
+          - case quantity_down:
+            - if <player.flag[craftingquantity]> > <player.flag[craftingquantity_increment]>:
+              - flag player craftingquantity:-:<player.flag[craftingquantity_increment]>
+              - inventory adjust slot:14 display_name:Current<&sp>Quantity<&co><&sp><player.flag[craftingquantity]> destination:<context.clicked_inventory>
+              - inventory adjust slot:14 quantity:<player.flag[craftingquantity]> destination:<context.clicked_inventory>
+          - case quantity_increment_up:
+            - flag player craftingquantity_increment:+:1
+            - inventory adjust slot:23 display_name:Current<&sp>Quantity<&sp>Increment<&co><&sp><player.flag[craftingquantity_increment]> destination:<context.clicked_inventory>
+            - inventory adjust slot:23 quantity:<player.flag[craftingquantity_increment]> destination:<context.clicked_inventory>
+          - case quantity_increment_down:
+            - if <player.flag[craftingquantity_increment]> > 1:
+              - flag player craftingquantity_increment:-:1
+              - inventory adjust slot:23 display_name:Current<&sp>Quantity<&sp>Increment<&co><&sp><player.flag[craftingquantity_increment]> destination:<context.clicked_inventory>
+              - inventory adjust slot:23 quantity:<player.flag[craftingquantity_increment]> destination:<context.clicked_inventory>
+          - case craft_potion_menu:
+            - if <player.flag[potiontocraft]||null> != null:
+              - if <player.flag[potion_craft_check]||null> == null:
+                - narrate "You are about to craft <player.flag[potiontocraft].get[1].replace[_].with[<&sp>]>. Click craft again to being crafting."
+                - flag player potion_craft_check:true
+              - else:
+                - define item <player.flag[potiontocraft]>
+                - narrate <player.flag[potiontocraft]>
+                - define player <player>
+                - define quantity <player.flag[craftingquantity]>
+                - run potion_craft_Task def:<[item]>|<[player]>|<[quantity]>
+            - else:
+              - narrate "You have no potion selected."
+
+
+        - determine cancelled
+
+potion_craft_task:
+  type: task
+  definitions: item|player|quantity
+  speed: instant
+  script:
+    - define matcheck 0
+    - if <[player].flag[alchemylevel]> >= <script[<[item]>].yaml_key[alchemylevel]>:
+      - foreach <script[<[item]>].yaml_key[requiredmats]>:
+        - define mat <[value].before[/]>
+        - define matamount <[value].after[/]>
+        - if <[player].inventory.contains[<[mat]>].quantity[<[matamount].mul[<[quantity]>]>]>:
+          - define matcheck:+:1
+          - narrate <[matamount].mul[<[quantity]>]>
+      - if <[matcheck]> == <script[<[item]>].yaml_key[matcheckval]>:
+        - foreach <script[<[item]>].yaml_key[requiredmats]>:
+          - define mat <[value].before[/]>
+          - define matamount <[value].after[/]>
+          - take <[mat]> quantity:<[matamount].mul[<[quantity]>]> from:<[player].inventory>
+        - narrate <[quantity]>
+        - give <[item]> quantity:<[quantity]> to:<[player].inventory>
+        - flag player alchemyexperience:+:<script[<[item]>].yaml_key[exp].mul[<[quantity]>]>
+        - actionbar "<&e>Alchemy<&sp>Exp<&co><&sp><[player].flag[alchemyexperience]>/<[player].flag[alchemylevel].mul[<[player].flag[alchemylevel]>].mul[50]>"
+        - flag <[player]> gatheringskillxpgained duration:2s
+      - else:
+        - announce "You do not have enough mats to make that many."
+      - inventory close
+      - inventory open d:normalpotion_menu
+    - else:
+      - narrate "You are not skilled enough at Alchemy to create this."
+      - inventory close
+      - inventory open d:normalpotion_menu

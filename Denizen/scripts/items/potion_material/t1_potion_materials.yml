@@ -1,0 +1,122 @@
+t1_root:
+  type: item
+  material: dead_bush
+  display name: <&e>Shrivelled Root
+  mechanisms:
+    nbt:
+      - itemid/235742974
+  lore:
+    - Tier<&co><&sp>1
+    - Useful ingredient.
+
+t1_essence:
+  type: item
+  material: potion
+  display name: <&e>Fading Essence
+  mechanisms:
+    potion_effects: water,false,false
+    nbt:
+      - itemid/235742974
+  lore:
+    - Tier<&co><&sp>1
+    - Useful ingredient.
+
+t1_leather:
+  type: item
+  material: leather
+  display name: <&e>Crude Leather
+  mechanisms:
+    nbt:
+      - itemid/235742974
+  lore:
+    - Tier<&co><&sp>1
+    - Useful ingredient.
+
+t1_Life_Leaf:
+  type: item
+  material: kelp
+  display name: <&e>Wilted Lifeleaf
+  mechanisms:
+    nbt:
+      - itemid/253509725234
+  lore:
+    - Tier<&co><&sp>1
+    - Useful ingredient.
+
+t1_power_mat:
+  type: item
+  material: sunflower
+  display name: <&e>Fading Power
+  mechanisms:
+    nbt:
+      - itemid/2523463
+  lore:
+    - Tier<&co><&sp>1
+    - Useful ingredient.
+
+t1_Catalyst:
+  type: item
+  material: redstone
+  display name: <&e>Catalyst
+  mechanisms:
+    nbt:
+      - itemid/2523463
+  lore:
+    - Tier<&co><&sp>1
+    - Useful ingredient.
+
+t1_rubisco:
+  type: item
+  material: kelp
+  display name: <&e>Wilted Rubisco Leaf
+  mechanisms:
+    nbt:
+      - itemid/253509725234
+  lore:
+    - Tier<&co><&sp>1
+    - Useful ingredient.
+
+t1_Benifuuki:
+  type: item
+  material: kelp
+  display name: <&e>Wilted Benifuuki Leaf
+  mechanisms:
+    nbt:
+      - itemid/253509725234
+  lore:
+    - Tier<&co><&sp>1
+    - Useful ingredient.
+
+t1_lavender:
+  type: item
+  material: kelp
+  display name: <&e>Wilted Lavender Leaf
+  mechanisms:
+    nbt:
+      - itemid/253509725234
+  lore:
+    - Tier<&co><&sp>1
+    - Useful ingredient.
+
+t1_sage:
+  type: item
+  material: kelp
+  display name: <&e>Wilted Sage Leaf
+  mechanisms:
+    nbt:
+      - itemid/253509725234
+  lore:
+    - Tier<&co><&sp>1
+    - Useful ingredient.
+
+t1_cocoa:
+  type: item
+  material: kelp
+  display name: <&e>Wilted Cocoa Leaf
+  mechanisms:
+    nbt:
+      - itemid/253509725234
+  lore:
+    - Tier<&co><&sp>1
+    - Useful ingredient.
+  

@@ -1,0 +1,42 @@
+load_item_data:
+    type: command
+    name: lid
+    description: loads item data yaml
+    usage: /lid
+    script:
+    - foreach <list[boot|chest|ear|hat|lefthand|righthand|leg|ring]>:
+        - yaml "load:item_data/<[value]>_stats.yml" id:<[value]>_stats
+        - narrate "Loaded <[value]>_stats"
+        
+open_equipmentinv:
+    type: command
+    name: eq
+    description: opens equipment inventory
+    usage: /eq
+    script:
+    - inventory open d:<player.uuid>_<player.flag[player_Class]>_equipmentinv
+    
+open_classmenu:
+    type: command
+    name: cm
+    description: opens equipment inventory
+    usage: /cm
+    script:
+    - inventory open d:class_select_menu2
+    
+xptolevel:
+    type: command
+    name: xpt
+    description: returns total xp from <level> to <level>
+    usage: /xpt
+    script:
+    - define totalxp 0
+    - define level 0
+    - repeat <context.args.get[1]>:
+        - define level:+:1
+        - define currentxp:+:<[level].mul[<[level]>].mul[50].div[4]>
+    - define level 0
+    - repeat <context.args.get[2]>:
+        - define level:+:1
+        - define totalxp:+:<[level].mul[<[level]>].mul[50].div[4]>
+    - narrate <[totalxp].sub[<[currentxp]>]>

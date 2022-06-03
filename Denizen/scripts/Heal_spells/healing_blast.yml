@@ -1,0 +1,21 @@
+healing_blast_listing:
+    type: item
+    lv: 1
+    spelltype: bell
+    spell: healing_blast
+    material: bell
+    mechanisms:
+        unbreakable: true
+    display name: Healing Blast
+    lore:
+    - Heal all friendlies near you.
+    enchantments:
+    - knockback:2
+    hide:
+    - enchantments
+
+healing_blast:
+    type: task
+    script:
+    - ratelimit <player> 3s
+    - heal <player> 5

@@ -1,0 +1,112 @@
+upgrademenu:
+    type: inventory
+    inventory: chest
+    title: "UPGRADE"
+    size: 27
+    slots:
+    - "[] [] [] [] [] [] [] [] []"
+    - "[] [] [] [] [upgradebutton] [] [] [] []"
+    - "[] [] [] [] [] [] [] [] []"
+    
+upgradebutton:
+    type: item
+    material: sunflower
+    display name: UPGRADE
+    lore:
+        - Clicking this will attempt an upgrade if you have an item selected.
+    
+    
+upgrademenu_handler:
+    type: world
+    debug: true
+    events:
+        on player right clicks npc:
+        - if <context.entity.equals_case_sensitive[n@1]>:
+            - inventory open d:in@upgrademenu
+            - narrate <player.open_inventory>
+            
+        on player closes upgrademenu:
+        - flag player itemtoupgrade:!
+        - flag player upgradestone:!
+        
+        on player left clicks in upgrademenu:
+        - narrate <context.slot>
+        - if <context.item> != <item[upgradebutton]> && <player.flag[upgradefailsafe]> == true:
+            - narrate "Upgrade Cancelled"
+            - inventory set o:air destination:<player.open_inventory> slot:5
+            - inventory set o:air destination:<player.open_inventory> slot:23
+            - inventory set o:air destination:<player.open_inventory> slot:13
+            - flag player upgradefailsafe:false
+            
+        - if <context.item.script.yaml_key[upgradeable]> == true:
+            - inventory set o:<context.item> destination:<player.open_inventory> slot:23 quantity:1
+            - flag player itemtoupgrade:<context.item>
+            - flag upgradeslot:<context.slot>
+            - narrate "Selected <context.item.display> <&f>for upgrade"
+            
+        - else if <context.item.script.yaml_key[itemtype]> == upgradestone:
+            - inventory set o:<context.item> destination:<player.open_inventory> slot:5 quantity:1
+            - flag player upgradestone:<context.item>
+            - narrate "Selected <context.item.display> <&f>as upgrade material"
+            
+        - else if <context.item.script.yaml_key[itemtype]> == upgradebonus:
+            - inventory set o:<context.item> destination:<player.open_inventory> slot:13
+            - flag player upg_success_bonus:<context.item.script.yaml_key[successbonus]>
+            - flag player upg_success_item:<context.item>
+            - narrate "<&b>Upgrade success chance increased by <context.item.script.yaml_key[successbonus].div[10]>%!"
+            
+        - else if <context.item> == <item[upgradebutton]>:
+            - if <player.has_flag[itemtoupgrade]> && <player.has_flag[upgradestone]>:
+                - if <item[<player.flag[itemtoupgrade]>].script.yaml_key[upgradetier]> == <item[<player.flag[upgradestone]>].script.yaml_key[upgradetier]>:
+                    - if <item[<player.flag[itemtoupgrade]>].nbt[upgradelvl].round_down> < <item[<player.flag[itemtoupgrade]>].script.yaml_key[maxupgrade].round_down>:
+                        - if <player.flag[upgradefailsafe]> == false:
+                            - narrate "Are you sure you wish to upgrade this item?"
+                            - narrate "If yes, click upgrade again.."
+                            - flag player upgradefailsafe:true
+                        - else:
+                                
+                            - if <proc[upgrade_chance]> == true:
+                                - inventory set o:air destination:<player.open_inventory> slot:5
+                                - inventory set o:air destination:<player.open_inventory> slot:23
+                                - inventory set o:air destination:<player.open_inventory> slot:13
+                                - narrate "Upgrade success!"
+                                - take <item[<player.flag[upgradestone]>]> qty:1
+                                - inventory adjust slot:<player.flag[upgradeslot]> nbt:upgradelvl/<item[<player.flag[itemtoupgrade]>].nbt[upgradelvl].as_decimal.add[1]>
+                                - inventory adjust slot:<player.flag[upgradeslot]> display_name:<item[<item[<player.flag[itemtoupgrade]>].script.name>].display><&sp><&lb><&chr[002b]><item[<player.inventory.slot[<player.flag[upgradeslot]>]>].nbt[upgradelvl]><&rb>
+                                - foreach <item[<player.flag[itemtoupgrade]>].script.yaml_key[basestats]>:
+                                    - inventory adjust slot:<player.flag[upgradeslot]> nbt:<[value]>/<item[<player.flag[itemtoupgrade]>].nbt[<[value]>].add[<item[<player.flag[itemtoupgrade]>].script.yaml_key[<[value]>up]>]>
+                                    - inventory adjust slot:<player.flag[upgradeslot]> lore:<item[<player.inventory.slot[<player.flag[upgradeslot]>]>].nbt[lorecolor]><item[<player.inventory.slot[<player.flag[upgradeslot]>]>].script.yaml_key[lore].separated_by[|]>|<&7>pdmg<&co><&sp><item[<player.inventory.slot[<player.flag[upgradeslot]>]>].nbt[pdmg]><&sp><&chr[00a6]><&sp>mdmg:<&sp><item[<player.inventory.slot[<player.flag[upgradeslot]>]>].nbt[mdmg]><&sp><&chr[00a6]><&sp><&7>pdef<&co><&sp><item[<player.inventory.slot[<player.flag[upgradeslot]>]>].nbt[pdef]><&sp><&chr[00a6]><&sp>mdef:<&sp><item[<player.inventory.slot[<player.flag[upgradeslot]>]>].nbt[mdef]><&sp><&chr[00a6]><&sp>Crit:<&sp><item[<player.inventory.slot[<player.flag[upgradeslot]>]>].nbt[crit]>|<item[<player.inventory.slot[<player.flag[upgradeslot]>]>].nbt[lorecolor]><yaml[<item[<player.inventory.slot[<player.flag[upgradeslot]>]>].script.name>_nbt_data].read[<item[<player.inventory.slot[<player.flag[upgradeslot]>]>].nbt[itemid]>].parse[after[bonus_].to_uppercase].separated_by[|<item[<player.inventory.slot[<player.flag[upgradeslot]>]>].nbt[lorecolor]>]>
+                                - flag player upgradefailsafe:false
+                                - if <player.has_flag[upg_success_item]>:
+                                    - take <item[<player.flag[upg_success_item]>]> qty:1
+                                    - flag player upg_success_item:!
+                                    - flag player upg_success_bonus:0
+                            - else:
+                                - inventory set o:air destination:<player.open_inventory> slot:5
+                                - inventory set o:air destination:<player.open_inventory> slot:23
+                                - inventory set o:air destination:<player.open_inventory> slot:13
+                                - narrate "Upgrade failed."
+                                - take <item[<player.flag[upgradestone]>]> qty:1
+                                - flag player itemtoupgrade:!
+                                - flag player upgradestone:!
+                                - if <player.has_flag[upg_success_item]>:
+                                    - take <item[<player.flag[upg_success_item]>]> qty:1
+                                    - flag player upg_success_item:!
+                                    - flag player upg_success_bonus:0
+
+                    - else:
+                        - narrate "This item is fully upgraded"
+                - else:
+                    - narrate "The upgrade stone tier is not appropriate for this item"
+            - else:
+                - narrate "Missing an upgrade item or material."
+        - else:
+            - if <context.item> != <item[air]>:
+                - narrate "That item cannot be upgraded."
+            
+        - determine cancelled
+
+        on player clicks in upgrademenu:
+        - if <context.click> != left:
+            - determine cancelled
+            

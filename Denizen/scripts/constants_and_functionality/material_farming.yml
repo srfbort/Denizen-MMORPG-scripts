@@ -1,0 +1,17 @@
+herblore:
+  type: world
+  events:
+    on player breaks grass|tall_grass in:testfarm:
+      - narrate broken
+      - define player <player>
+      - determine passively <proc[herb_drop].context[<[player]>]>
+      - run testfarmregrow
+
+testfarmregrow:
+  type: task
+  speed: instant
+  script:
+    - define possibleloc <cuboid[testfarm].blocks[grass_block].random.up[1]>
+    - while <[possibleloc].material> == grass:
+      - define possibleloc <cuboid[testfarm].blocks[grass_block].random.up[1]>
+    - modifyblock <[possibleloc]> grass

@@ -1,0 +1,42 @@
+assassinate_listing:
+    type: item
+    lv: 30
+    skillpointlv: 10
+    levelflag: assassinatelevel
+    skillpointmax: 6
+    spelltype: sword
+    spell: assassinate
+    material: iron_sword
+    mechanisms:
+        unbreakable: true
+    display name: Assassinate
+    lore:
+    - wow!
+    enchantments:
+    - knockback:2
+    hide:
+    - enchantments
+    
+assassinate:
+    type: task
+    script:
+    - foreach <player.eye_location.points_between[<player.cursor_on[15]>]>:
+        - playeffect effect:flame at:<[value]> quantity:2 visibility:16 offset:0,0,0
+        - narrate <[value].find.living_entities.within[2]>
+        - define search <[value].find.living_entities.within[2].get[1]>
+        - if <[search]> != <player>:
+            - define <[search]> target
+            - choose <proc[target_check].context[<[target]>]>:
+                - case mythicmob:
+                    - teleport <player> <[target].location.backward_flat[2]>
+                    - narrate mythicmob
+                - case enemyplayer:
+                    - teleport <player> <[target].location.backward_flat[2]>
+                    - narrate enemyplayer
+                - case regularmob:
+                    - teleport <player> <[target].location.backward_flat[2]>
+                    - narrate regularmob
+                - case friendlyplayer:
+                    - narrate friendlyplayer
+    
+    

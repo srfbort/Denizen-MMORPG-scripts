@@ -1,0 +1,63 @@
+rapid_slash_listing:
+    type: item
+    lv: 5
+    skillpointlv: 10
+    levelflag: rapidslashlevel
+    skillpointmax: 6
+    spelltype: sword
+    spell: rapid_slash
+    material: iron_sword
+    mechanisms:
+        unbreakable: true
+    display name: Rapid Slash
+    lore:
+    - Very rapid, many slash.
+    enchantments:
+    - knockback:2
+    hide:
+    - enchantments
+    
+rapid_Slash:
+    type: task
+    script:
+    - if !<player.has_flag[rapidslashlevel]>:
+        - flag player rapidslashlevel:1
+    - define slash1 <player.eye_location.forward[3].left[1].down[1].points_between[<player.eye_location.forward_flat[3].right[1].up[1]>].distance[0.2]>
+    - define slash2 <player.eye_location.forward[3].right[1].down[1].points_between[<player.eye_location.forward_flat[3].left[1].up[1]>].distance[0.2]>
+
+    - define targets:<player.eye_location.forward_flat[3].find.living_entities.within[3]>
+    - playeffect effect:crit at:<[slash1]> quantity:10 offset:0
+    - foreach <[targets]>:
+        - define target <[value]>
+        - run rapid_slash_damage def:<[target]>
+    - wait 0.2s
+    - playeffect effect:crit at:<[slash2]> quantity:10 offset:0
+    - define targets:<player.eye_location.forward_flat[3].find.living_entities.within[3]>
+    - run rapid_slash_damage def:<[target]>
+
+rapid_slash_damage:
+    type: task
+    speed: instant
+    definitions: target
+    script:
+        - define rapidslashbasedmg <player.flag[rapidslashlevel].mul[3].add[2]>
+        - define strscaling <proc[total_str].div[10]>
+        - define playerpdmg <proc[final_pdmg].div[2]>
+        - define rapidslashfinaldmg <[rapidslashbasedmg].add[<[strscaling]>].add[<[playerpdmg]>].round_down>
+        - choose <proc[target_check].context[<[target]>]>:
+                - case mythicmob:
+                    - define combined <[target].flag[pdef].add[<[rapidslashfinaldmg]>]>
+                    - define defreduc <[rapidslashfinaldmg].div[<[combined]>]>
+                    - define final <[rapidslashfinaldmg].mul[<[defreduc]>]>
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[final].round_to[0]> source:<player>
+                - case enemyplayer:
+                    - define combined <[target].flag[final_pdef].add[<[rapidslashfinaldmg]>]>
+                    - define defreduc <[rapidslashfinaldmg].div[<[combined]>]>
+                    - define final <[rapidslashfinaldmg].mul[<[defreduc]>]>
+                    - narrate <[final].round_to[0]>
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[final].round_to[0]> source:<player>
+                - case regularmob:
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[rapidslashfinaldmg]> source:<player>

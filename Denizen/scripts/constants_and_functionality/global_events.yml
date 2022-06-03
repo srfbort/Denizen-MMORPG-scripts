@@ -1,0 +1,230 @@
+server_start_events:
+    type: world
+    debug: false
+    events:
+        on server start:
+        - foreach <server.flag[unique_item_yamls]>:
+            - yaml "load:unique_item_data/<[value]>.yml" id:<[value]>
+        - yaml "load:mythicmobstats/mmstats.yml" id:mmstats
+        - yaml "load:class_data/default_data.yml" id:default_data
+        on reload scripts:
+        - flag server basic_monsters:!
+        - flag server basic_monsters:|:CREEPER:200|ZOMBIE:100|COW:20|BAT:50|BLAZE:200|CHICKEN:10|ENDERMAN:250|DROWNED:150|ENDER_DRAGON:1500|ENDERMITE:100|EVOKER:250|GHAST:250|GIANT:1000|GUARDIAN:150|HUSK:150|ILLUSIONER:200|IRON_GOLEM:500|PHANTOM:250|PIG_ZOMBIE:150|PILLAGER:200|RAVAGER:500|SHULKER:150|SKELETON:100|SLIME:50|SPIDER:100|SQUID:50|VEX:100|VINDICATOR:200|WITHER_SKELETON:250|WITHER:1000|WITCH:200|ZOMBIE_VILLAGER:50|ZOMBIE_HORSE:100
+        
+        on player quits:
+        - yaml id:<player.uuid>_data set <player.flag[class]>_data:!
+        - yaml id:<player.uuid>_data set <player.flag[class]>_data:|:max_health:<player.flag[max_health]>|max_mana:<player.flag[max_mana]>|current_mana:<player.flag[current_mana]>|mana_regeneration_base:<player.flag[mana_regeneration_base]>|intelligence:<player.flag[intelligence]>|endurance:<player.flag[endurance]>|strength:<player.flag[strength]>|dexterity:<player.flag[dexterity]>|spirit:<player.flag[spirit]>|crit_chance:<player.flag[crit_chance]>|stat_points:<player.flag[stat_points]>|level:<player.flag[level]>|experience:<player.flag[experience]>|bonus_health:<player.flag[bonus_health]>|bonus_mana:<player.flag[bonus_mana]>|bonus_mana_regeneration:<player.flag[bonus_mana_regeneration]>|bonus_intelligence:<player.flag[bonus_intelligence]>|bonus_endurance:<player.flag[bonus_endurance]>|bonus_strength:<player.flag[bonus_strength]>|bonus_dexterity:<player.flag[bonus_dexterity]>|bonus_spirit:<player.flag[bonus_spirit]>|bonus_crit_chance:<player.flag[bonus_crit_chance]>|helmet:<player.flag[helmet]>|ear1:<player.flag[ear1]>|ear2:<player.flag[ear2]>|lefthand:<player.flag[lefthand]>|chest:<player.flag[chest]>|righthand:<player.flag[righthand]>|ring1:<player.flag[ring1]>|legs:<player.flag[legs]>|ring2:<player.flag[ring2]>|boots:<player.flag[boots]>
+        - yaml "savefile:class_data/<player.uuid>_data.yml" id:<player.uuid>_data
+        - yaml unload id:<player.uuid>_data
+        
+        on system time secondly:
+        #mana regeneration handler
+        - foreach <server.list_online_players> as:onlineplayer:
+            - if <[onlineplayer].flag[current_mana].round> < <[onlineplayer].flag[max_mana].round>:
+                - flag <[onlineplayer]> current_mana:+:<[onlineplayer].flag[mana_regeneration_base]>
+        # hp/mp display bar
+        - foreach <server.list_online_players>:
+            - define oplayer <[value]>
+            - if <[oplayer].flag[gatheringskillxpgained].is_expired>:
+                - actionbar "<&e>[Level:<[oplayer].flag[level]>] <&b><&l>MP: <[oplayer].flag[current_mana].round>/<[oplayer].flag[max_mana].round><&f> | <&e>EXP: <[oplayer].flag[experience]>/<[oplayer].flag[level].mul[<[oplayer].flag[level]>].mul[50]> <&f>| <&c><&l>HP: <[oplayer].health.round>/<[oplayer].health_max> <&e>[<[oplayer].flag[class]>]" targets:<[oplayer]>
+             # buff handler
+            - if <[oplayer].flag[buffed]> == true:
+                - foreach <[oplayer].flag[buffs]> as:buff:
+                    - define buffname <[buff].before[/]>
+                    - define statbuffs <[buff].after[/].before[\]>
+                    - if <[oplayer].flag[<[buffname]>].is_expired>:
+                        - foreach <[statbuffs].replace[<&ns>].with[<&pipe>]>:
+                            - narrate <[value]>
+                            - define statname <[value].before[<&co>]>
+                            - define statvalue <[value].after[<&co>]>
+                            - flag <[oplayer]> temp_<[statname]>:-:<[statvalue]>
+                        - flag <[oplayer]> max_health:<proc[target_max_hp].context[<[oplayer]>].round>
+                        - adjust <[oplayer]> max_health:<proc[target_max_hp].context[<[oplayer]>].round>
+                        - flag <[oplayer]> max_mana:<proc[target_max_mp].context[<[oplayer]>].round>
+                        - flag <[oplayer]> buffs:<-:<[buff]>
+                - if <[oplayer].flag[buffs].size> == 0:
+                    - flag <[oplayer]> buffed:false
+            
+            - if <[oplayer].flag[healthregenerating]> == true:
+                - foreach <[oplayer].flag[healthregensources]> as:regendata:
+                    - define regenname <[regendata].before[/]>
+                    - define regenamount <[regendata].after[/].before[\]>
+                    - if <[oplayer].flag[<[regenname]>].is_expired>:
+                        - flag <[oplayer]> healthregensources:<-:<[regendata]>
+                    - else:
+                        - heal <[regenamount]> <[oplayer]>
+                - if <[oplayer].flag[healthregensources].size> == 0:
+                    - flag <[oplayer]> healthregenerating:false
+
+            - if <[oplayer].flag[manaregenerating]> == true:
+                - foreach <[oplayer].flag[manaregensources]> as:regendata:
+                    - define regenname <[regendata].before[/]>
+                    - define regenamount <[regendata].after[/].before[\]>
+                    - if <[oplayer].flag[<[regenname]>].is_expired>:
+                        - flag <[oplayer]> manaregensources:<-:<[regendata]>
+                    - else:
+                        - if <[regenamount].add[<[oplayer].flag[current_mana]>]> > <[oplayer].flag[max_mana]>:
+                            - define target <[oplayer]>
+                            - flag <[oplayer]> current_mana:<proc[target_max_mp].context[<[target]>]>
+                        - else:
+                            - flag <[oplayer]> current_mana:+:<[regenamount]>
+                - if <[oplayer].flag[manaregensources].size> == 0:
+                    - flag <[oplayer]> manaregenerating:false
+
+             # debuff handler
+            - if <[oplayer].flag[debuffed]> == true:
+                - foreach <[oplayer].flag[debuffs]> as:debuff:
+                    - if <[oplayer].flag[<[debuff].before[<&co>]>].is_expired>:
+                        - flag <[oplayer]> <[debuff].before[/].after[<&co>]>_debuff:-:<[debuff].after[/]>
+                        - flag <[oplayer]> debuffs:<-:<[debuff]>
+                        - define target <[oplayer]>
+                        - flag <[oplayer]> final_<[debuff].before[/].after[<&co>]>:<proc[target_final_<[debuff].before[/].after[<&co>]>].context[<[oplayer]>]>
+                        - announce "debuff removed<&co> <[oplayer].flag[final_pdef]>"
+                    - else:
+                        - narrate "notexpired"
+                - if <[oplayer].flag[debuffs].size> == 0:
+                    - flag <[oplayer]> debuffed:false
+             # dot handler
+            - if <[oplayer].flag[dotted]> == true:
+                - foreach <[oplayer].flag[dots]> as:dot:
+                    - if !<[oplayer].flag[<[dot].before[<&co>]>].is_expired>:
+                        - announce <[dot].before[<&co>]>
+                        - hurt <[oplayer]> <[dot].after[<&co>].before[/].round> source:<[dot].after[\].before[<&ns>]>
+                        - actionbar "<&e>[Level:<[oplayer].flag[level]>] <&b><&l>MP: <[oplayer].flag[current_mana].round>/<[oplayer].flag[max_mana].round><&f> | <&e>EXP: <[oplayer].flag[experience]>/<[oplayer].flag[level].mul[<[oplayer].flag[level]>].mul[50]> <&f>| <&c><&l>HP: <[oplayer].health.round>/<[oplayer].health_max> <&e>[<[oplayer].flag[class]>]" targets:<[oplayer]>
+                        - adjust <[oplayer]> no_damage_duration:1t
+                        - wait 5t
+                    - else:
+                        - flag <[oplayer]> dots:<-:<[dot]>
+                    - if <[oplayer].flag[dots].size> == 0:
+                        - flag <[oplayer]> dotted:false
+             # exp handlers
+            - if <[oplayer].flag[experience]> >= <[oplayer].flag[level].mul[<[oplayer].flag[level]>].mul[50]>:
+                - title title:<&e>You<&sp>levelled<&sp>up!
+                - flag <[oplayer]> experience:<[oplayer].flag[experience].sub[<[oplayer].flag[level].mul[<[oplayer].flag[level]>].mul[50]>]>
+                - flag <[oplayer]> level:+:1
+                - playeffect effect:crit at:<[oplayer].location> quantity:10
+                - playeffect effect:FIREWORKS_SPARK at:<[oplayer].location> quantity:5
+                - firework <[oplayer].location> random power:2 primary:white
+                - if <[oplayer].flag[changed_class].is_expired>:
+                    - flag <[oplayer]> stat_points:+:2
+                    - flag <[oplayer]> max_health:<proc[target_max_hp].context[<[oplayer]>].round>
+                    - adjust <[oplayer]> max_health:<proc[target_max_hp].context[<[oplayer]>].round>
+                    - flag <[oplayer]> max_mana:<proc[target_max_mp].context[<[oplayer]>].round>
+                - else:
+                    - narrate "You almost got free health!"
+                - if <[oplayer].flag[level].mod[5]> == 0:
+                    - flag <[oplayer]> skillpoints:+:1
+                    
+                    
+            - if <[oplayer].flag[alchemyexperience]> >= <[oplayer].flag[alchemylevel].mul[<[oplayer].flag[alchemylevel]>].mul[50].div[4]>:
+                - title title:<&e>Alchemy<&sp>level<&sp>increased!
+                - flag <[oplayer]> alchemyexperience:<[oplayer].flag[alchemyexperience].sub[<[oplayer].flag[alchemylevel].mul[<[oplayer].flag[alchemylevel]>].mul[50].div[4]>]>
+                - flag <[oplayer]> alchemylevel:+:1
+                - playeffect effect:crit at:<[oplayer].location> quantity:10
+                - playeffect effect:FIREWORKS_SPARK at:<[oplayer].location> quantity:5
+                - firework <[oplayer].location> random power:2 primary:white
+
+        after entity spawns:
+        - if <context.entity.is_mythicmob>:
+            - foreach <yaml[mmstats].read[<context.entity.mythicmob.internal_name>]>:
+                - narrate <[value]>
+                - flag <context.entity> <[value]>
+        on entity dies:
+        - if <context.entity.entity_type> == player:
+            - if <player.flag[dots].size> > 0:
+                - foreach <player.flag[dots]> as:dot:
+                    - flag player <[dot].before[<&co>]> Duration:1t
+            - determine passively keep_inv
+            - determine item:air
+            
+        on mythicmob mob killed by player:
+        - define mobxp <context.mob.entity.flag[experience]>
+        - if <player.flag[party_players_in]> != none:
+            - define partysize <server.flag[<player.flag[party_players_in]>].size>
+            - define xpreduc <[partysize].div[5].mul[0.30]>
+            - subtractamount <[xpreduc].mul[mobxp]>
+            - define sharedxp <[mobxp].sub[subtractamount]>
+            - foreach <server.flag[<player.flag[party_players_in]>]>:
+                - flag p@<[value]> experience:+:<[sharedxp]>
+
+        - else:
+            - flag <context.killer> experience:+:<[mobxp]>
+
+
+        on player damages entity:
+        - define target <context.entity>
+        - narrate <proc[target_check].context[<[target]>]>
+
+        - if <player.item_in_hand.material.name> == iron_sword:
+            - if <context.cause> == entity_attack:
+                - choose <proc[target_check].context[<[target]>]>:
+                    - case mythicmob:
+                        - determine <proc[normalsword_damage].context[<[target]>]>
+                    - case enemyplayer:
+                        - determine <proc[normalsword_damage].context[<[target]>]>
+                    - case regularmob:
+                        - determine <proc[normalsword_damage].context[<[target]>]>
+                    - case friendlyplayer:
+                        - narrate "u wish"
+                        - determine passively cancelled
+
+        - if <player.item_in_hand.material.name> == bow:
+            - narrate <context.cause>
+            - if <context.cause> == projectile:
+                - narrate choosing
+                - define target <context.entity>
+                - choose <proc[target_check].context[<[target]>]>:
+                    - case mythicmob:
+                        - determine <proc[normalbow_damage].context[<[target]>]>
+                    - case enemyplayer:
+                        - determine <proc[normalbow_damage].context[<[target]>]>
+                    - case regularmob:
+                        - determine <proc[normalbow_damage].context[<[target]>]>
+                    - case friendlyplayer:
+                        - narrate "cannot damage this player"
+                        - determine passively cancelled
+
+normalbow_damage:
+    type: procedure
+    definitions: target
+    script:
+        - define normalbowbasedmg 1
+        - define strscaling <proc[total_str].div[10]>
+        - define dexscaling <proc[total_dex].div[5]>
+        - define playerpdmg <proc[total_pdmg].div[3]>
+        - define normalbowfinaldmg <[normalbowbasedmg].add[<[strscaling]>].add[<[playerpdmg]>].add[<[dexscaling]>].round>
+        - choose <proc[target_check].context[<[target]>]>:
+                - case mythicmob:
+                    - define combined <[target].flag[pdef].add[<[normalbowfinaldmg]>]>
+                    - define defreduc <[normalbowfinaldmg].div[<[combined]>]>
+                    - define final <[normalbowfinaldmg].mul[<[defreduc]>]>
+                    - determine <[final].round_to[0]>
+                - case enemyplayer:
+                    - define combined <[target].flag[final_pdef].add[<[normalbowfinaldmg]>]>
+                    - define defreduc <[normalbowfinaldmg].div[<[combined]>]>
+                    - define final <[normalbowfinaldmg].mul[<[defreduc]>]>
+                    - determine <[final].round_to[0]>
+                - case regularmob:
+                    - determine <[normalbowfinaldmg]>
+normalsword_damage:
+    type: procedure
+    definitions: target
+    script:
+        - define normalswordbasedmg 1
+        - define strscaling <proc[total_str].div[5]>
+        - define dexscaling <proc[total_dex].div[15]>
+        - define playerpdmg <proc[total_pdmg].div[3]>
+        - define normalswordfinaldmg <[normalswordbasedmg].add[<[strscaling]>].add[<[playerpdmg]>].add[<[dexscaling]>].round>
+        - choose <proc[target_check].context[<[target]>]>:
+                - case mythicmob:
+                    - define combined <[target].flag[pdef].add[<[normalswordfinaldmg]>]>
+                    - define defreduc <[normalswordfinaldmg].div[<[combined]>]>
+                    - define final <[normalswordfinaldmg].mul[<[defreduc]>]>
+                    - determine <[final].round_to[0]>
+                - case enemyplayer:
+                    - define combined <[target].flag[final_pdef].add[<[normalswordfinaldmg]>]>
+                    - define defreduc <[normalswordfinaldmg].div[<[combined]>]>
+                    - define final <[normalswordfinaldmg].mul[<[defreduc]>]>
+                    - determine <[final].round_to[0]>
+                - case regularmob:
+                    - determine <[normalswordfinaldmg]>

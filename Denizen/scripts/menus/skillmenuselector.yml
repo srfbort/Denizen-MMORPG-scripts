@@ -1,0 +1,37 @@
+skillmenuselectormenu:
+    type: inventory
+    inventory: chest
+    title: "Bind Skills / Upgrade skills"
+    size: 45
+    slots:
+    - "[black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane]"
+    - "[black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane]"
+    - "[black_stained_glass_pane] [black_stained_glass_pane] [selectspellbook] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [selectskillpoint] [black_stained_glass_pane] [black_stained_glass_pane]"
+    - "[black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane]"
+    - "[black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane]"
+
+skillmenuselectorhandler:
+    type: world
+    events:            
+        on player clicks in skillmenuselectormenu:
+            - choose <context.slot>:
+                - case 1:
+                    - inventory open d:playerspellbook
+                - case 3:
+                    - inventory open d:skillpointmenu
+            - determine passively cancelled
+
+selectspellbook:
+    type: item
+    material: red_stained_Glass_pane
+    display name: <&e>Spellbook
+    lore:
+    - Open the spellbook
+
+selectskillpoint:
+    type: item
+    material: red_stained_Glass_pane
+    display name: <&e>Skillpoint menu
+    lore:
+    - Open the skill point menu
+

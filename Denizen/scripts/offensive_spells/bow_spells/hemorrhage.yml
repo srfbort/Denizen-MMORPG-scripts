@@ -1,0 +1,100 @@
+hemorrhage_listing:
+    type: item
+    lv: 15
+    skillpointlv: 10
+    levelflag: hemorrhagelevel
+    skillpointmax: 6
+    spelltype: bow
+    spell: hemorrhage
+    material: bow
+    mechanisms:
+        unbreakable: true
+    display name: Hemorrhage
+    lore:
+    - A powerful hemorrhaging attack.
+    enchantments:
+    - knockback:2
+    hide:
+    - enchantments
+
+hemorrhage:
+    type: task
+    script:
+    - if !<player.has_flag[hemorrhagelevel]>:
+        - flag player hemorrhagelevel:1
+    - flag player hemorrhage_1_target_found:0
+    - playsound sound:ENTITY_ARROW_SHOOT at:<player.location>
+    - foreach <player.eye_location.points_between[<player.eye_location.forward[30]>]> as:arrow_location:
+        - if <player.flag[hemorrhage_1_target_found]> == 0:
+            - playeffect effect:SPELL at:<[arrow_location]> data:0|<red> quantity:5 offset:0,0,0 visibility:65
+            - if <[arrow_location].find.living_entities.within[1.5].exclude[<player>].size> > 0:
+                - define targets <[arrow_location].find.living_entities.within[1.5].exclude[<player>]>
+                - foreach <[targets]>:
+                    - define target <[value]>
+                    - if <proc[target_check].context[<[target]>]> != friendlyplayer:
+                        - flag player hemorrhage_1_target_found:1
+                        - run hemorrhage_damage def:<[target]>
+                        - run hemorrhage_dot def:<[target]>
+                        - foreach stop
+            - else:
+            # no target found
+        - else:
+            - foreach stop
+                    
+    - flag player hemorrhage_1_target_found:0
+
+hemorrhage_damage:
+    type: task
+    speed: instant
+    definitions: target
+    script:
+        - define hemorrhagebasedmg <player.flag[hemorrhagelevel].mul[5].add[5]>
+        - define strscaling <proc[total_str].div[10]>
+        - define playerpdmg <proc[final_pdmg].div[2]>
+        - define hemorrhagefinaldmg <[hemorrhagebasedmg].add[<[strscaling]>].add[<[playerpdmg]>].round_down>
+        - choose <proc[target_check].context[<[target]>]>:
+                - case mythicmob:
+                    - define combined <[target].flag[pdef].add[<[hemorrhagefinaldmg]>]>
+                    - define defreduc <[hemorrhagefinaldmg].div[<[combined]>]>
+                    - define final <[hemorrhagefinaldmg].mul[<[defreduc]>]>
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[final].round_to[0]> source:<player>
+                - case enemyplayer:
+                    - define combined <[target].flag[final_pdef].add[<[hemorrhagefinaldmg]>]>
+                    - define defreduc <[hemorrhagefinaldmg].div[<[combined]>]>
+                    - define final <[hemorrhagefinaldmg].mul[<[defreduc]>]>
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[final].round_to[0]> source:<player>
+                - case regularmob:
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[hemorrhagefinaldmg]> source:<player>
+
+hemorrhage_dot:
+    type: task
+    definitions: target
+    speed: instant
+    script:
+        - choose <proc[target_check].context[<[target]>]>:
+            - case mythicmob:
+
+            - case enemyplayer:
+                - define dexscaling <proc[total_dex].div[20]>
+                - define pdmg <proc[final_pdmg].div[15]>
+                - define hemorrhagelevel <player.flag[hemorrhagelevel].mul[2]>
+                - define final <[dexscaling].add[<[pdmg]>].add[<[hemorrhagelevel]>].round>
+                - narrate "dot: <[final].round>"
+                - if <[target].flag[dots].separated_by[|].contains_any[hemorrhagedot]>:
+                    - define dotdata <[target].flag[dots].get_sub_items[hemorrhagedot].split_by[|]>
+                    - if <[dotdata].after[/]> < <[defreduc]>:
+                        - flag <[target]> dots:<-:<[dotdata]>
+                        - flag <[target]> dotted:true
+                        - flag <[target]> dots:->:hemorrhagedot<&co><[final]>/bleed\<player.name><&ns><player.flag[hemorrhagelevel]>
+                        - flag <[target]> hemorrhagedot:true duration:5s
+                    - else:
+                        - narrate "dot extended"
+                        - define currentexpiration <[target].flag[hemorrhagedot].expiration>
+                        - flag <[target]> hemorrhagedot:true duration:<[currentexpiration].add[5s]>
+                - else:
+                    - flag <[target]> dotted:true
+                    - flag <[target]> dots:->:hemorrhagedot<&co><[final]>/bleed\<player.name><&ns><player.flag[hemorrhagelevel]>
+                    - flag <[target]> hemorrhagedot:true duration:10s

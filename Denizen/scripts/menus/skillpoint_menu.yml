@@ -1,0 +1,44 @@
+skillpointmenu:
+    type: inventory
+    inventory: chest
+    title: "Assign Skillpoints"
+    size: 45
+    slots:
+    - "[<item[fire_wave_listing]>] [ice_wave_listing] [ice_nova_listing] [meteor_listing] [explosive_force_listing] [irresistable_pull_listing] [] [] []"
+    - "[rapid_slash_listing] [shattering_strike_listing] [serrated_slash_listing] [whirlwind_listing] [rush_listing] [crippling_strike_listing] [] [] [assassinate_listing]"
+    - "[rapid_shot_listing] [Aimed_shot_listing] [poison_shot_listing] [hemorrhage_listing] [piercing_shot_listing] [rolling_shot_listing] [] [] []"
+    - "[raging_spirit_listing] [] [] [] [] [] [] [] []"
+    - "[heal_self_listing] [heal_other_listing] [regenerate_listing] [healing_blast_listing] [] [] [] [] []"
+
+skillpointmenuhandler:
+    type: world
+    events:            
+        on player clicks in skillpointmenu:
+            - narrate <context.clicked_inventory.title>
+            - if <context.clicked_inventory> != <player.inventory>:
+                - if <player.has_flag[<context.item.script.yaml_key[spell]>_obtained]> || <player.flag[obtainedall]> == true:
+                    
+                    - choose <context.click>:
+                        - case left:
+                            - if <context.item.script.yaml_key[skillpointlv].mul[<player.flag[<context.item.script.yaml_key[levelflag]>]>]> <= <player.flag[level]>:
+                                - if <player.flag[<context.item.script.yaml_key[levelflag]>]> < <context.item.script.yaml_key[skillpointmax]>:
+                                    - if <player.flag[skillpoints]> > 0:
+                                        - flag player <context.item.script.yaml_key[levelflag]>:++
+                                        - flag player skillpoints:--
+                                        - inventory adjust slot:<context.slot> quantity:<player.flag[<context.item.script.yaml_key[levelflag]>]> destination:<context.clicked_inventory>
+                                    - else:
+                                        - narrate "you have no skillpoints.."
+                                - else:
+                                    - narrate "This skill is upgraded as much as it can be"
+                            - else:
+                                - narrate "Your level is too low for this upgrade."
+                        - case right:
+                            - if <player.flag[<context.item.script.yaml_key[levelflag]>]> > 1:
+                                - flag player <context.item.script.yaml_key[levelflag]>:--
+                                - flag player skillpoints:++
+                                - inventory adjust slot:<context.slot> quantity:<player.flag[<context.item.script.yaml_key[levelflag]>]> destination:<context.clicked_inventory>
+                            - else:
+                                - narrate "Spell is at lowest level."
+                - else:
+                    - narrate "You have not obtained this skill."
+            - determine passively cancelled

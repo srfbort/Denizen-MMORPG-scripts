@@ -1,0 +1,18 @@
+normalpot_task:
+  type: task
+  speed: instant
+  definitions: player|item
+  script:
+    - ratelimit <[player]> 1s
+    - choose <[item].script.yaml_key[normalpottype]>:
+      - case health:
+        - heal <[item].script.yaml_key[health_amount]> <[player]>
+        - take <[item]> quantity:1 from:<player.inventory>
+      - case mana:
+        - if <[item].script.yaml_key[mana_amount].add[<[player].flag[current_mana]>]> > <[player].flag[max_mana]>:
+          - flag <[player]> current_mana:<[player].flag[max_mana]>
+          - take <[item]> quantity:1 from:<player.inventory>
+        - else:
+          - flag <[player]> current_mana:+:<[item].script.yaml_key[mana_amount]>
+          - take <[item]> quantity:1 from:<player.inventory>
+

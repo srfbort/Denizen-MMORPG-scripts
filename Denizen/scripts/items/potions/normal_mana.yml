@@ -1,0 +1,114 @@
+t1_mana:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: normal
+  taskname: normalpot_task
+  normalpottype: mana
+  mana_amount: 25
+  requiredmats: t1_sage/4|t1_root/2|glass_bottle/1
+  matcheckval: 3
+  level: 1
+  exp: 97
+  alchemylevel: 1
+  mechanisms:
+    nbt:
+      - itemid/265247445
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Potion of Mana
+  lore:
+    - Tier<&co> 1
+    - Potion with magical properties, invigorates your mana pool.
+
+t2_mana:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: normal
+  taskname: normalpot_task
+  normalpottype: mana
+  mana_amount: 25
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  level: 15
+  exp: 215
+  alchemylevel: 20
+  mechanisms:
+    nbt:
+      - itemid/265247445
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Potion of Mana
+  lore:
+    - Tier<&co> 2
+    - Potion with magical properties, invigorates your mana pool.
+
+t3_mana:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: normal
+  taskname: normalpot_task
+  normalpottype: mana
+  mana_amount: 25
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  level: 30
+  exp: 280
+  alchemylevel: 30
+  mechanisms:
+    nbt:
+      - itemid/265247445
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Potion of Mana
+  lore:
+    - Tier<&co> 3
+    - Potion with magical properties, invigorates your mana pool.
+
+t4_mana:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: normal
+  taskname: normalpot_task
+  normalpottype: mana
+  mana_amount: 25
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  level: 45
+  exp: 360
+  alchemylevel: 40
+  mechanisms:
+    nbt:
+      - itemid/265247445
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Potion of Mana
+  lore:
+    - Tier<&co> 4
+    - Potion with magical properties, invigorates your mana pool.
+
+t5_mana:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: normal
+  taskname: normalpot_task
+  normalpottype: mana
+  mana_amount: 25
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  level: 65
+  exp: 600
+  alchemylevel: 60
+  mechanisms:
+    nbt:
+      - itemid/265247445
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Potion of Mana
+  lore:
+    - Tier<&co> 5
+    - Potion with magical properties, invigorates your mana pool.

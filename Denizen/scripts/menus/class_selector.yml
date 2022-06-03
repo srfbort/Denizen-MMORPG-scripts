@@ -1,0 +1,146 @@
+class_select_menu2:
+    type: inventory
+    inventory: chest
+    title: "Class Selection"
+    size: 27
+    slots:
+    - "[class_select_menu_slot1] [] [] [class_select_menu_slot2] [] [class_select_menu_slot3] [] [] [class_select_menu_slot4]"
+    - "[] [] [] [] [] [] [] [] []"
+    - "[class_menu_switch_to_stat_menu] [] [] [] [] [] [] [] [class_menu_switch_to_stat_menu]"
+    
+class_select_menu_slot1:
+    type: item
+    material: stick
+    class: Wizard
+    spelldamage_mult: 0.25
+    intelligence_mult: 0.25
+    endurance_mult: 0.25
+    strength_mult: 0.1
+    dexterity_mult: 0.1
+    spirit_mult: 0.20
+    spirit_mana_mult: 0.1
+    health_per_level: 1.5
+    mana_per_level: 2
+    display name: <&e>Wizard
+    lore:
+    - Better at using magical abilities.
+    
+class_select_menu_slot2:
+    type: item
+    material: iron_helmet
+    class: Knight
+    spelldamage_mult: 0.25
+    intelligence_mult: 0.25
+    endurance_mult: 0.25
+    strength_mult: 0.1
+    dexterity_mult: 0.1
+    spirit_mult: 0.20
+    spirit_mana_mult: 0.1
+    health_per_level: 1.5
+    mana_per_level: 2
+    display name: <&e>Knight
+    lore:
+    - Best at absorbing damage.
+    
+class_select_menu_slot3:
+    type: item
+    material: bow
+    class: Archer
+    spelldamage_mult: 0.25
+    intelligence_mult: 0.25
+    endurance_mult: 0.25
+    strength_mult: 0.1
+    dexterity_mult: 0.1
+    spirit_mult: 0.20
+    spirit_mana_mult: 0.1
+    health_per_level: 1.5
+    mana_per_level: 2
+    display name: <&e>Archer
+    lore:
+    - Specializes in consistent damage over time.
+    
+    
+class_select_menu_slot4:
+    type: item
+    material: nether_star
+    class: Divinist
+    spelldamage_mult: 0.25
+    intelligence_mult: 0.25
+    endurance_mult: 0.25
+    strength_mult: 0.1
+    dexterity_mult: 0.1
+    spirit_mult: 0.20
+    spirit_mana_mult: 0.1
+    health_per_level: 1.5
+    mana_per_level: 2
+    display name: <&r><&e>Divinist
+    lore:
+    - Specializes in support abilities.
+    
+class_menu_switch_to_stat_menu:
+    type: item
+    material: red_stained_glass_pane
+    display name: Switch to Stat menu
+
+class_select_menu_handler:
+    type: world
+    debug: false
+    events:
+       
+       #switch menu button
+        on player clicks class_menu_switch_to_stat_menu in class_select_menu2:
+        - inventory open d:in@stat_menu
+        - sidebar set title:Remaining<&sp>Points:<&sp><player.flag[stat_points]> Values:Power:<&sp><player.flag[intelligence]><&lb><player.flag[bonus_intelligence]><&rb>|Endurance:<&sp><player.flag[endurance]><&lb><player.flag[bonus_endurance]><&rb>|Strength:<&sp><player.flag[strength]><&lb><player.flag[bonus_strength]><&rb>|Dexterity:<&sp><player.flag[dexterity]><&lb><player.flag[bonus_dexterity]><&rb>|Spirit:<&sp><player.flag[spirit]><&lb><player.flag[bonus_spirit]><&rb>|Crit<&sp>Chance:<&sp><player.flag[crit_chance].div[10].as_decimal><&lb><player.flag[bonus_crit_chance].div[10].as_decimal><&rb>
+        #choose class button
+        
+        on player left clicks in class_select_menu2:
+        - narrate "clicked <context.item.script.yaml_key[class]>"
+        - if <context.item.script.yaml_key[class]||null> != null:
+            - define statlist <list[max_health:<player.flag[max_health]>|max_mana:<player.flag[max_mana]>|current_mana:<player.flag[current_mana]>|mana_regeneration_base:<player.flag[mana_regeneration_base]>|intelligence:<player.flag[intelligence]>|endurance:<player.flag[endurance]>|strength:<player.flag[strength]>|dexterity:<player.flag[dexterity]>|spirit:<player.flag[spirit]>|crit_chance:<player.flag[crit_chance]>|stat_points:<player.flag[stat_points]>|level:<player.flag[level]>|experience:<player.flag[experience]>|bonus_health:<player.flag[bonus_health]>|bonus_mana:<player.flag[bonus_mana]>|bonus_mana_regeneration:<player.flag[bonus_mana_regeneration]>|bonus_intelligence:<player.flag[bonus_intelligence]>|bonus_endurance:<player.flag[bonus_endurance]>|bonus_strength:<player.flag[bonus_strength]>|bonus_dexterity:<player.flag[bonus_dexterity]>|bonus_spirit:<player.flag[bonus_spirit]>|bonus_crit_chance:<player.flag[bonus_crit_chance]>|helmet:<player.flag[helmet]>|ear1:<player.flag[ear1]>|ear2:<player.flag[ear2]>|lefthand:<player.flag[lefthand]>|chest:<player.flag[chest]>|righthand:<player.flag[righthand]>|ring1:<player.flag[ring1]>|legs:<player.flag[legs]>|ring2:<player.flag[ring2]>|boots:<player.flag[boots]>]>
+            - narrate <context.item.script.yaml_key[class]>
+            - if <server.has_file[class_data/<player.uuid>_data.yml]>:
+                - if <yaml[<player.uuid>_data].contains[<context.item.script.yaml_key[class]>_data]>:
+                
+                    - yaml "load:class_data/<player.uuid>_data.yml" id:<player.uuid>_data
+                    - yaml id:<player.uuid>_data set <player.flag[class]>_data:!
+                    - yaml id:<player.uuid>_data set <player.flag[class]>_data:|:<[statlist]>
+                    - yaml "savefile:class_data/<player.uuid>_data.yml" id:<player.uuid>_data
+                    
+                    - flag player class:<context.item.script.yaml_key[class]>
+                    
+                    - foreach <yaml[<player.uuid>_data].read[<context.item.script.yaml_key[class]>_data]>:
+                        - narrate <[value]>
+                        - flag player <[value]>
+                - else:
+                    - yaml "load:class_data/<player.uuid>_data.yml" id:<player.uuid>_data
+                    - yaml id:<player.uuid>_data set <player.flag[class]>_data:!
+                    - yaml id:<player.uuid>_data set <player.flag[class]>_data:|:<[statlist]>
+                    - yaml "savefile:class_data/<player.uuid>_data.yml" id:<player.uuid>_data
+                
+                    - flag player class:<context.item.script.yaml_key[class]>
+                    - foreach <yaml[default_data].read[default_<context.item.script.yaml_key[class]>_data]>:
+                        - narrate <[value]>
+                        - flag player <[value]>
+                 
+            - else:
+                - yaml create id:<player.uuid>_data
+                - flag player class:<context.item.script.yaml_key[class]>
+                - foreach <yaml[default_data].read[default_<context.item.script.yaml_key[class]>_data]>:
+                    - narrate <[value]>
+                    - flag player <[value]>
+                - yaml id:<player.uuid>_data set <player.flag[class]>_data:|:<[statlist]>
+                - yaml "savefile:class_data/<player.uuid>_data.yml" id:<player.uuid>_data
+            
+            - flag player spelldamage_mult:<context.item.script.yaml_key[spelldamage_mult]>
+            - flag player intelligence_mult:<context.item.script.yaml_key[intelligence_mult]>
+            - flag player endurance_mult:<context.item.script.yaml_key[endurance_mult]>
+            - flag player strength_mult:<context.item.script.yaml_key[strength_mult]>
+            - flag player dexterity_mult:<context.item.script.yaml_key[dexterity_mult]>
+            - flag player spirit_mult:<context.item.script.yaml_key[spirit_mult]>
+            - flag player spirit_mana_mult:<context.item.script.yaml_key[spirit_mana_mult]>
+            - flag player health_per_level:<context.item.script.yaml_key[health_per_level]>
+            - flag player mana_per_level:<context.item.script.yaml_key[mana_per_level]>
+            - flag player changed_class duration:2s
+            - adjust <player> max_health:<player.flag[max_health].round_down>
+            - sidebar set title:Remaining<&sp>Points:<&sp><player.flag[stat_points]> Values:Power:<&sp><player.flag[intelligence]><&lb><player.flag[bonus_intelligence]><&rb>|Endurance:<&sp><player.flag[endurance]><&lb><player.flag[bonus_endurance]><&rb>|Strength:<&sp><player.flag[strength]><&lb><player.flag[bonus_strength]><&rb>|Dexterity:<&sp><player.flag[dexterity]><&lb><player.flag[bonus_dexterity]><&rb>|Spirit:<&sp><player.flag[spirit]><&lb><player.flag[bonus_spirit]><&rb>|Crit<&sp>Chance:<&sp><player.flag[crit_chance].div[10].as_decimal><&lb><player.flag[bonus_crit_chance].div[10].as_decimal><&rb>
+            - determine cancelled

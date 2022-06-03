@@ -1,0 +1,119 @@
+t1_antidote:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: antidot
+  taskname: antidot_task
+  dottype: poison
+  level: 15
+  tier: 1
+  alchemylevel: 20
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  exp: 200
+  mechanisms:
+    nbt:
+      - itemid/1
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Antidote
+  lore:
+    - Tier 1
+    - Level<&co> 1
+    - Binds to the poison in your system, neutralizing it.
+
+t2_antidote:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: antidot
+  taskname: antidot_task
+  dottype: poison
+  level: 15
+  tier: 2
+  alchemylevel: 35
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  exp: 320
+  mechanisms:
+    nbt:
+      - itemid/1
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Antidote
+  lore:
+    - Tier 2
+    - Level<&co> 25
+    - Binds to the poison in your system, neutralizing it.
+
+t3_antidote:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: antidot
+  taskname: antidot_task
+  dottype: poison
+  level: 30
+  tier: 3
+  alchemylevel: 50
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  exp: 450
+  mechanisms:
+    nbt:
+      - itemid/1
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Antidote
+  lore:
+    - Tier<&co> 3
+    - Level<&co> 35
+    - Binds to the poison in your system, neutralizing it.
+
+t4_antidote:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: antidot
+  taskname: antidot_task
+  dottype: poison
+  level: 45
+  tier: 4
+  alchemylevel: 65
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  exp: 700
+  mechanisms:
+    nbt:
+      - itemid/1
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Antidote
+  lore:
+    - Tier<&co> 4
+    - Level<&co> 45
+    - Binds to the poison in your system, neutralizing it.
+
+t5_antidote:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: antidot
+  taskname: antidot_task
+  dottype: poison
+  level: 65
+  tier: 5
+  alchemylevel: 80
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  exp: 950
+  mechanisms:
+    nbt:
+      - itemid/1
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Antidote
+  lore:
+    - Tier<&co> 5
+    - Level<&co> 65
+    - Binds to the poison in your system, neutralizing it.

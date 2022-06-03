@@ -1,0 +1,23 @@
+target_check:
+    type: procedure
+    definitions: target
+    script:
+      - if <[target].is_mythicmob>:
+        - determine mythicmob
+      - else if <[target].is_player>:
+        - if <player.faction> != faction@<&2>wilderness:
+          - if <[target].faction> != <player.faction> && <[target].faction.relation[<player.faction>]> != ally && ( <[target].flag[party_players_in]> != <player.flag[party_players_in]> || <player.flag[party_players_in]> == none ):
+            - determine enemyplayer
+          - else:
+            - determine friendlyplayer
+        - else:
+          - if <player.flag[party_players_in]> == none:
+            - determine enemyplayer
+          - else if <[target].flag[party_players_in]> != <player.flag[party_players_in]>:
+            - determine enemyplayer
+          - else:
+            - determine friendlyplayer
+      - else if !<[target].is_mythicmob> && !<[target].is_player> && <[target].is_living>:
+        - determine regularmob
+      - else:
+        - determine notarget

@@ -1,0 +1,14 @@
+total_crit:
+    type: procedure
+    script:
+        - determine <player.flag[crit_chance].div[10].add[<proc[bonus_crit_conversion]>].round_to[1]>
+bonus_crit_conversion:
+    type: procedure
+    script:
+    - determine <player.flag[bonus_crit].add[<player.flag[temp_crit]>]>
+    
+crit_for_scriptcalc:
+    type: procedure
+    script:
+    - determine <proc[total_crit].mul[10]>
+    

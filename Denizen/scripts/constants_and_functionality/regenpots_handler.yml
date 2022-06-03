@@ -1,0 +1,44 @@
+regenpot_task:
+  type: task
+  speed: instant
+  definitions: player|item
+  script:
+    - define regenname <[item].script.yaml_key[regenname]>
+    - define regenamount <[item].script.yaml_key[regenamount]>
+    - define tier <[item].script.yaml_key[tier]>
+    - define duration <[item].script.yaml_key[duration]>
+    - choose <[item].script.yaml_key[regenpottype]>:
+      - case health:
+        - if <[player].flag[healthregensources].separated_by[|].contains_any[<[regenname]>]>:
+          - foreach <[player].flag[healthregensources]>:
+            - define current <[value]>
+            - if <[current].contains_any[<[regenname]>]>:
+              - define regencheck <[value]>
+          - if <[tier]> >= <[regencheck].after[\]>:
+            - flag <[player]> healthregensources:<-:<[regencheck]>
+            - flag <[player]> healthregensources:->:<[regenname]>/<[regenamount]>\<[tier]>
+            - flag <[player]> <[regenname]> duration:<[duration]>
+            - flag <[player]> healthregenerating:true
+          - else:
+            - narrate "Existing regen is stronger"
+        - else:
+          - flag <[player]> healthregensources:->:<[regenname]>/<[regenamount]>\<[tier]>
+          - flag <[player]> <[regenname]> duration:<[duration]>
+          - flag <[player]> healthregenerating:true
+      - case mana:
+        - foreach <[player].flag[manaregensources]>:
+            - define current <[value]>
+            - if <[current].contains_any[<[regenname]>]>:
+              - define regencheck <[value]>
+        - if <[player].flag[manaregensources].separated_by[|].contains_any[<[regenname]>]>:
+          - if <[tier]> >= <[regencheck].after[\]>:
+            - flag <[player]> manaregensources:<-:<[regencheck]>
+            - flag <[player]> manaregensources:->:<[regenname]>/<[regenamount]>\<[tier]>
+            - flag <[player]> <[regenname]> duration:<[duration]>
+            - flag <[player]> manaregenerating:true
+          - else:
+            - narrate "Existing regen is stronger"
+        - else:
+          - flag <[player]> manaregensources:->:<[regenname]>/<[regenamount]>\<[tier]>
+          - flag <[player]> <[regenname]> duration:<[duration]>
+          - flag <[player]> manaregenerating:true

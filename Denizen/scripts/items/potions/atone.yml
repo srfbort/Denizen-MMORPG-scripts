@@ -1,0 +1,129 @@
+t1_Atone_buff:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: buff
+  taskname: buff_task
+  buffname: atone_buff
+  duration: 2s
+  level: 15
+  tier: 1
+  alchemylevel: 20
+  statbuffs: spirit:50
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  exp: 200
+  mechanisms:
+    nbt:
+      - itemid/23525
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Atone
+  lore:
+    - tier<&co><&sp>1
+    - Level<&co><&sp>1
+    - Increases spirit.
+
+t2_Atone_buff:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: buff
+  taskname: buff_task
+  buffname: atone_buff
+  duration: 2s
+  level: 15
+  tier: 2
+  alchemylevel: 30
+  statbuffs: spirit:50
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  exp: 280
+  mechanisms:
+    nbt:
+      - itemid/23525
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Atone
+  lore:
+    - tier<&co><&sp>2
+    - Level<&co><&sp>1
+    - Increases spirit.
+
+t3_Atone_buff:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: buff
+  taskname: buff_task
+  buffname: atone_buff
+  duration: 2s
+  level: 30
+  tier: 3
+  alchemylevel: 45
+  statbuffs: spirit:50
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  exp: 400
+  mechanisms:
+    nbt:
+      - itemid/23525
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Atone
+  lore:
+    - tier<&co><&sp>3
+    - Level<&co><&sp>1
+    - Increases spirit.
+
+t4_Atone_buff:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: buff
+  taskname: buff_task
+  buffname: atone_buff
+  duration: 2s
+  level: 45
+  tier: 4
+  alchemylevel: 55
+  statbuffs: spirit:50
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  exp: 550
+  mechanisms:
+    nbt:
+      - itemid/23525
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Atone
+  lore:
+    - tier<&co><&sp>4
+    - Level<&co><&sp>1
+    - Increases spirit.
+
+t5_Atone_buff:
+  type: item
+  material: glass_bottle
+  itemtype: potion
+  potiontype: buff
+  taskname: buff_task
+  buffname: atone_buff
+  duration: 2s
+  level: 65
+  tier: 5
+  alchemylevel: 70
+  statbuffs: spirit:50
+  requiredmats: spider_eye/4|diamond/1|gold_nugget/3
+  matcheckval: 3
+  exp: 750
+  mechanisms:
+    nbt:
+      - itemid/23525
+      - lorecolor/<&f>
+      - statcolor/<&f>
+  display name: <&e>Atone
+  lore:
+    - tier<&co><&sp>5
+    - Level<&co><&sp>1
+    - Increases spirit.

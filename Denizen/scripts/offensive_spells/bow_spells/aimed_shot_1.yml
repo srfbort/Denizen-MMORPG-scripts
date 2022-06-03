@@ -1,0 +1,77 @@
+aimed_shot_listing:
+    type: item
+    lv: 1
+    skillpointlv: 10
+    levelflag: aimedshotlevel
+    skillpointmax: 6
+    spelltype: bow
+    spell: aimed_shot
+    material: bow
+    mechanisms:
+        unbreakable: true
+        quantity: <player.flag[aimedshotlevel]>
+    display name: Aimed Shot
+    lore:
+    - A deadly accurate shot...
+    enchantments:
+    - knockback:2
+    hide:
+    - enchantments
+
+
+aimed_shot:
+    type: task
+    script:
+    - ratelimit <player> 3s
+    - define aimed_shot_target_found false
+
+    - if !<player.has_flag[aimedshotlevel]>:
+        - flag player aimedshotlevel:1
+    - if <player.flag[current_mana]> >= 5:
+        - flag player current_mana:-:5
+    - else:
+        - narrate "you don't have enough mana"
+        - determine cancelled
+
+    - playsound sound:ENTITY_ARROW_SHOOT at:<player.location>
+    
+    - foreach <player.eye_location.points_between[<player.eye_location.forward[30]>]> as:arrow_location:
+        - if <[aimed_shot_target_found]> == false:
+            - playeffect effect:crit at:<[arrow_location]> quantity:5 offset:0,0,0 visibility:65
+            - if <[arrow_location].find.living_entities.within[2].exclude[<player>].size> > 0:
+                - define target <[arrow_location].find.living_entities.within[2].exclude[<player>].get[1]>
+                - if <proc[target_check].context[<[target]>]> != friendlyplayer:
+                    - run aimed_shot_damage def:<[target]>
+                    - define aimed_shot_target_found:true
+                    - foreach stop
+                    
+        - else:
+
+    - define aimed_shot_target_found false
+
+
+aimed_shot_damage:
+    type: task
+    speed: instant
+    definitions: target
+    script:
+        - define aimedshotbasedmg <player.flag[aimedshotlevel].mul[5].add[10]>
+        - define strscaling <proc[total_str].div[10]>
+        - define playerpdmg <proc[final_pdmg].div[2]>
+        - define aimedshotfinaldmg <[aimedshotbasedmg].add[<[strscaling]>].add[<[playerpdmg]>].round_down>
+        - choose <proc[target_check].context[<[target]>]>:
+                - case mythicmob:
+                    - define combined <[target].flag[pdef].add[<[aimedshotfinaldmg]>]>
+                    - define defreduc <[aimedshotfinaldmg].div[<[combined]>]>
+                    - define final <[aimedshotfinaldmg].mul[<[defreduc]>]>
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[final].round_to[0]> source:<player>
+                - case enemyplayer:
+                    - define combined <[target].flag[final_pdef].add[<[aimedshotfinaldmg]>]>
+                    - define defreduc <[aimedshotfinaldmg].div[<[combined]>]>
+                    - define final <[aimedshotfinaldmg].mul[<[defreduc]>]>
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[final].round_to[0]> source:<player>
+                - case regularmob:
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[aimedshotfinaldmg]> source:<player>

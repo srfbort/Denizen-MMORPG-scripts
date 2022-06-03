@@ -1,0 +1,34 @@
+rolling_shot_listing:
+    type: item
+    lv: 1
+    skillpointlv: 10
+    levelflag: rollingshotlevel
+    skillpointmax: 6
+    spelltype: bow
+    spell: rolling_shot
+    material: bow
+    mechanisms:
+        unbreakable: true
+    display name: rolling Shot
+    lore:
+    - A deadly accurate rolling shot.
+    enchantments:
+    - knockback:2
+    hide:
+    - enchantments
+
+
+rolling_shot:
+    type: task
+    script:
+    - define x
+    - define z
+
+    - adjust <player> velocity:<player.location.direction.vector.mul[-1.5].with_y[0]>
+    - shoot arrow origin:<player.forward_flat[1]> speed:5 script:rolling_shot_cleanup
+
+rolling_shot_cleanup:
+    type: task
+    script:
+    - remove <[shot_entities]>
+                    

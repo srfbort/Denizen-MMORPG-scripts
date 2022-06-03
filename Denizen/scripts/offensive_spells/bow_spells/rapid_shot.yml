@@ -1,0 +1,31 @@
+rapid_shot_listing:
+    type: item
+    lv: 1
+    skillpointlv: 10
+    levelflag: rapidshotlevel
+    skillpointmax: 6
+    spelltype: bow
+    spell: rapid_shot
+    material: bow
+    mechanisms:
+        unbreakable: true
+    display name: Rapid Shot
+    lore:
+    - A weak but rapid attack.
+    enchantments:
+    - knockback:2
+    hide:
+    - enchantments
+
+
+rapid_shot:
+    type: task
+    script:
+    - ratelimit <player> 0.5s
+    - playsound sound:ENTITY_ARROW_SHOOT at:<player.location>
+    - shoot arrow origin:<player.forward_flat[1]> speed:5 script:rapid_shot_cleanup
+
+rapid_shot_cleanup:
+    type: task
+    script:
+    - remove <[shot_entities]>

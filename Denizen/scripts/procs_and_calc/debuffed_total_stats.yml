@@ -1,0 +1,34 @@
+target_total_int:
+    type: procedure
+    definitions: target
+    script:
+    - define target <[target]>
+    - determine <[target].flag[intelligence].add[<[target].flag[bonus_intelligence]>].add[<[target].flag[temp_intelligence]>]>
+    
+target_total_str:
+    type: procedure
+    definitions: target
+    script:
+    - define target <[target]>
+    - determine <[target].flag[strength].add[<[target].flag[bonus_strength]>].add[<[target].flag[temp_strength]>]>
+
+target_total_spr:
+    type: procedure
+    definitions: target
+    script:
+    - define target <[target]>
+    - determine <[target].flag[spirit].add[<[target].flag[bonus_spirit]>].add[<[target].flag[temp_spirit]>]>
+    
+target_total_dex:
+    type: procedure
+    definitions: target
+    script:
+    - define target <[target]>
+    - determine <[target].flag[dexterity].add[<[target].flag[bonus_dexterity]>].add[<[target].flag[temp_dexterity]>]>
+    
+target_total_end:
+    type: procedure
+    definitions: target
+    script:
+    - define target <[target]>
+    - determine <[target].flag[endurance].add[<[target].flag[bonus_endurance]>].add[<[target].flag[temp_endurance]>]>

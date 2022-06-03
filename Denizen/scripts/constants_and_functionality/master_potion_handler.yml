@@ -1,0 +1,30 @@
+potion_handler:
+  type: world
+  events:
+    on player consumes item:
+      - if <context.item.has_script>:
+        - determine passively cancelled
+    on player right clicks block:
+      - if <player.item_in_hand.has_script>:
+        - if <player.item_in_hand.script.yaml_key[itemtype]> == potion:
+          - if <player.item_in_hand.script.yaml_key[level]> <= <player.flag[level]>:
+            - choose <player.item_in_hand.script.yaml_key[potiontype]>:
+              - case antidot:
+                - define antidotitem <player.item_in_hand>
+                - define player <player>
+                - define dottype <player.item_in_hand.script.yaml_key[dottype]>
+                - run <player.item_in_hand.script.yaml_key[taskname]> def:<[player]>|<[antidotitem]>|<[dottype]>
+              - case normal:
+                - define player <player>
+                - define item <player.item_in_hand>
+                - run <player.item_in_hand.script.yaml_key[taskname]> def:<[player]>|<[item]>
+              - case buff:
+                - define player <player>
+                - define item <player.item_in_hand>
+                - run <player.item_in_hand.script.yaml_key[taskname]> def:<[player]>|<[item]>
+              - case regen:
+                - define player <player>
+                - define item <player.item_in_hand>
+                - run <player.item_in_hand.script.yaml_key[taskname]> def:<[player]>|<[item]>
+          - else:
+            - narrate "You are not high enough level to use this."

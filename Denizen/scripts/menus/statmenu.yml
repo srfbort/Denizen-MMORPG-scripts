@@ -1,0 +1,122 @@
+stat_menu:
+    type: inventory
+    title: "Left Click: +    /    Right Click: -"
+    size: 27
+    slots:
+    - "[<i@stat_menu_slot1>] [] [<i@stat_menu_slot2>] [] [<i@stat_menu_slot3>] [] [<i@stat_menu_slot4>] [] [<i@stat_menu_slot5>]"
+    - "[] [] [] [] [] [] [] [] []"
+    - "[] [] [] [] [<i@stat_menu_slot6>] [] [] [] []"
+
+stat_menu_switch_to_class_menu:
+        type: item
+        material: blue_stained_glass_pane
+        display name: Open Class Selection Menu
+        
+stat_menu_slot1:
+    type: item
+    stat: intelligence
+    material: book
+    display name: Power
+    lore:
+    - Greatly increases power of offensive spells
+    - Slightly increases maximum mana
+    
+stat_menu_slot2:
+    type: item
+    stat: endurance
+    material: iron_helmet
+    display name: <&e>Endurance
+    lore:
+    - Raises health
+    
+stat_menu_slot3:
+    type: item
+    stat: strength
+    material: iron_axe
+    display name: <&e>Strength
+    lore:
+    - Increases physical damage
+
+stat_menu_slot4:
+    type: item
+    material: arrow
+    stat: dexterity
+    display name: <&e>Dexterity
+    lore:
+    - Increases Damage over Time ability damage
+    - Dodge rate?
+    
+stat_menu_slot5:
+    type: item
+    stat: spirit
+    material: nether_star
+    display name: <&e>Spirit
+    lore:   
+    - Greatly increases maximum mana
+    - Greatly increases power of defensive/support spells
+    - Slightly increases power of offensive spells
+    
+stat_menu_slot6:
+    type: item
+    stat: crit_chance
+    material: firework_rocket
+    display name: <&e>Critical Chance
+    lore:    
+    - Increases critical chance by 0.1% per point
+    
+stat_menu_handler:
+    type: world
+    debug: false
+    events:   
+        on player closes inventory:
+        - sidebar remove
+        
+        on player left clicks in stat_menu:
+        - if <context.item.script.yaml_key[stat]||null> != null:
+            - if <player.flag[stat_points]> > 0:
+                - flag player <context.item.script.yaml_key[stat]>:+:1
+                - flag player stat_points:-:1
+                - choose <context.item.script.yaml_key[stat]>:
+                    - case endurance:
+                        - flag <player> max_health:<proc[max_hp]>
+                        - adjust <player> max_health:<proc[max_hp].round_down>
+                    - case spirit:
+                        - flag <player> max_mana:<proc[max_mp]>
+                        - flag <player> current_mana:<proc[max_mp]>
+                    - case intelligence:
+                        - flag <player> max_mana:<proc[max_mp]>
+                        - flag <player> current_mana:<proc[max_mp]>
+
+                - inventory open d:in@stat_menu
+                - sidebar set title:Remaining<&sp>Points:<&sp><player.flag[stat_points]> Values:Power:<&sp><player.flag[intelligence]><&lb><player.flag[bonus_intelligence]><&rb>|Endurance:<&sp><player.flag[endurance]><&lb><player.flag[bonus_endurance]><&rb>|Strength:<&sp><player.flag[strength]><&lb><player.flag[bonus_strength]><&rb>|Dexterity:<&sp><player.flag[dexterity]><&lb><player.flag[bonus_dexterity]><&rb>|Spirit:<&sp><player.flag[spirit]><&lb><player.flag[bonus_spirit]><&rb>|Crit<&sp>Chance:<&sp><player.flag[crit_chance].div[10].as_Decimal><&lb><player.flag[bonus_crit_chance].div[10].as_decimal><&rb>
+            - else:
+                - narrate "You dont have any stat points!"
+        - determine cancelled  
+        
+        on player right clicks in stat_menu:
+        - if <context.item.script.yaml_key[stat]||null> != null:
+            - if <player.flag[<context.item.script.yaml_key[stat]>]> > 0:
+                - flag player <context.item.script.yaml_key[stat]>:-:1
+                - flag player stat_points:+:1
+                - choose <context.item.script.yaml_key[stat]>:
+                    - case endurance:
+                        - flag <player> max_health:<proc[max_hp]>
+                        - adjust <player> max_health:<proc[max_hp].round_down>
+                    - case spirit:
+                        - flag <player> max_mana:<proc[max_mp]>
+                        - flag <player> current_mana:<proc[max_mp]>
+                    - case intelligence:
+                        - flag <player> max_mana:<proc[max_mp]>
+                        - flag <player> current_mana:<proc[max_mp]>
+                - inventory open d:in@stat_menu
+                - sidebar set title:Remaining<&sp>Points:<&sp><player.flag[stat_points]> Values:Power:<&sp><player.flag[intelligence]><&lb><player.flag[bonus_intelligence]><&rb>|Endurance:<&sp><player.flag[endurance]><&lb><player.flag[bonus_endurance]><&rb>|Strength:<&sp><player.flag[strength]><&lb><player.flag[bonus_strength]><&rb>|Dexterity:<&sp><player.flag[dexterity]><&lb><player.flag[bonus_dexterity]><&rb>|Spirit:<&sp><player.flag[spirit]><&lb><player.flag[bonus_spirit]><&rb>|Crit<&sp>Chance:<&sp><player.flag[crit_chance].div[10].as_decimal><&lb><player.flag[bonus_crit_chance].div[10].as_decimal><&rb>
+            - else:
+                - narrate "You have no points invested in this stat."
+        - else if <context.item.script.name> == stat_menu_switch_to_class_menu:
+            - inventory open d:in@class_select_menu2
+            - sidebar set title:Remaining<&sp>Points:<&sp><player.flag[stat_points]> Values:Power:<&sp><player.flag[intelligence]><&lb><player.flag[bonus_intelligence]><&rb>|Endurance:<&sp><player.flag[endurance]><&lb><player.flag[bonus_endurance]><&rb>|Strength:<&sp><player.flag[strength]><&lb><player.flag[bonus_strength]><&rb>|Dexterity:<&sp><player.flag[dexterity]><&lb><player.flag[bonus_dexterity]><&rb>|Spirit:<&sp><player.flag[spirit]><&lb><player.flag[bonus_spirit]><&rb>|Crit<&sp>Chance:<&sp><player.flag[crit_chance].div[10].as_decimal><&lb><player.flag[bonus_crit_chance].div[10].as_decimal><&rb>
+            
+        - determine cancelled
+        
+        on player clicks stat_menu_switch_to_class_menu in stat_menu:
+        - inventory open d:in@class_select_menu2

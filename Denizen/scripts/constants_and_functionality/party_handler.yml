@@ -1,0 +1,92 @@
+party:
+    type: command
+    name: party
+    description: used to create groups for training
+    usage: /party create/invite/accept/kick/leave/disband (targetplayername)
+    script:
+    - choose <context.args.get[1]||null>:
+        - case null:
+            - narrate "incorrect usage. try /party create/invite/accept/kick/leave/disband"
+        - case create:
+            - if <player.flag[player_in_party]> == false:
+                - flag player player_in_party:true
+                - flag player party_players_in:<player.name>_party
+                - flag server <player.name>_party:->:<player.name>
+                - flag player partyrole:leader
+                - narrate "Created party <player.flag[party_players_in]>"
+            - else:
+                - narrate "You are already in a party"
+        - case invite:
+            - if <context.args.get[2]||null> != null:
+                - define invitedname p@<context.args.get[2]>
+                - if <player.flag[player_in_party]> == true:
+                    - if <[invitedname].flag[player_in_party]> == false:
+                        - if <[invitedname].flag[partyinvitepending].is_expired>:
+                            - narrate "<player.name> has invited you to a party. 10 seconds to /party accept." targets:<[invitedname]>
+                            - flag <[invitedname]> partyinvitepending:<player.flag[party_players_in]> duration:10s
+                        - else:
+                            - narrate "That player already has a pending invite"
+                    - else:
+                        - narrate "The target player is already in a party"
+                - else:
+                    - narrate "you are not in a party...."
+            - else:
+                - narrate "no player specified."
+                
+                
+        - case accept:
+            - if <player.flag[player_in_party]> == false:
+                - if <player.has_flag[partyinvitepending]>:
+                    - narrate <server.flag[<player.flag[partyinvitepending]>].size>
+                    - if <server.flag[<player.flag[partyinvitepending]>].size> < 5:
+                        - flag player player_in_party:true
+                        - flag player party_players_in:<player.flag[partyinvitepending]>
+                        - flag server <player.flag[party_players_in]>:->:<player.name>
+                        - flag player partyinvitepending:<player.flag[party_players_in]> duration:5t
+                        - narrate "you have joined the party"
+                    - else:
+                        - narrate "The party is full"
+                - else:
+                    - narrate "You do not have an invite"
+            - else:
+                - narrate "You are already in a party"
+        - case kick:
+            - if <player.flag[player_in_party]> == true:
+                - if <player.flag[partyrole]> == leader:
+                    - if <context.args.get[2]||null> != null:
+                        - if <list[server.flag[<player.name>_party]>].separated_by[|].contains_any[<context.args.get[2]>]>:
+                            - flag server <player.name>_party:<-:<context.args.get[2]>
+                            - flag p@<context.args.get[2]> player_in_party:false
+                            - flag p@<context.args.get[2]> party_players_in:none
+                            - narrate "You have been removed from the party" targets:p@<context.args.get[2]>
+                        - else:
+                            - narrate "Player is not in your party"
+                    - else:
+                        - narrate "no player specified."
+                - else:
+                    - narrate "You are not the party leader"
+            - else:
+                - narrate "You are not in a party."
+                        
+        
+        - case leave:
+            - if <player.flag[player_in_party]> == true:
+                - if <player.flag[partyrole]> != leader:
+                    - flag server <player.flag[party_players_in]>:<-:<player.name>
+                    - flag player player_in_party:false
+                    - flag player party_players_in:none
+                    - narrate "You have left the party"
+                - else:
+                    - narrate "The party leader cannot leave the party without disbanding."
+            - else:
+                - narrate "you are not in a party"
+        - case disband:
+            - if <player.flag[player_in_party]> == true:
+                - if <player.flag[partyrole]> == leader:
+                    - flag player partyrole:none
+                    - foreach <server.flag[<player.name>_party]>:
+                        - narrate <[value]>
+                        - flag p@<[value]> player_in_party:false
+                        - flag p@<[value]> party_players_in:none
+                        - narrate "Party has been disbanded" targets:p@<[value]>
+                    - flag server <player.name>_party:!

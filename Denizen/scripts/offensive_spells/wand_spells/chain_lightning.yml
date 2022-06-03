@@ -1,0 +1,3 @@
+chain_lightning_task:
+    type: task
+    script:

@@ -1,0 +1,119 @@
+ice_nova_listing:
+    type: item
+    lv: 30
+    skillpointlv: 10
+    levelflag: icenovalevel
+    skillpointmax: 6
+    spelltype: wand
+    spell: ice_nova
+    material: book
+    mechanisms:
+        unbreakable: true
+    display name: Ice Nova
+    lore:
+    - boomy boom
+    enchantments:
+    - knockback:2
+
+ice_nova:
+    type: task
+    script:
+    - if !<player.has_flag[icenovalevel]>:
+        - flag player icenovalevel:1
+    - define lavabeam:cu@<player.eye_location>|<player.location.cursor_on[25].simple>
+    - define cursor_aim:<player.eye_location.points_between[<player.location.cursor_on[25].ignore[water|flowing_water|grass|tall_grass|air]>]>
+    - playsound <player.location.cursor_on[5]> sound:BLOCK_CAMPFIRE_CRACKLE
+    - playsound <player.location.cursor_on[5]> sound:BLOCK_FIRE_AMBIENT
+    
+    - define last:<player.eye_location.forward[1].points_between[<player.location.cursor_on[25].ignore[water|flowing_water|grass|tall_grass|air]>].last>
+    - foreach <player.eye_location.forward[1].points_between[<player.location.cursor_on[25].ignore[water_source|flowing_water|grass|tall_grass|air]>]>:
+        - playeffect effect:BUBBLE_POP at:<[value]> quantity:5 offset:0,0,0 visibility:35
+        - wait 1t
+        - playeffect effect:BUBBLE_POP at:<[value]> quantity:5 offset:0,0,0 visibility:35
+    - define falldown <[last]>
+    - while <[falldown].material> == m@air:
+        - define falldown <[falldown].with_y[<[falldown].y.sub[1]>]>
+        - playeffect effect:bubble_pop at:<[falldown]> quantity:5 offset:0,0,0 visibility:35
+        - wait 1t
+    - define last <[falldown]>
+    - define loc <[last].with_y[<[last].y.add[1]>]>
+    - run nova_particle def:<[loc]>
+            
+    - flag player novaeffect:on duration:5s
+    - repeat 5:
+        - foreach <[last].find.living_entities.within[5].exclude[<player>]>:
+            - if <[last].find.living_entities.within[5].exclude[<player>].size> == 0:
+                - foreach next
+            - else:
+                - define target <[value]>
+                - adjust <[target]> walk_speed:0.1
+                - narrate <proc[ice_nova_damage].context[<[target]>]>
+                - run ice_nova_damage def:<[target]>
+                - run ice_nova_slow def:<[target]>
+        - wait 1s 
+
+    - playeffect effect:explosion_large at:<[last].with_y[<[last].y.add[1]>]> quantity:25 offset:2,0,2 visibility:35
+    - playsound <[last]> sound:ENTITY_GENERIC_EXPLODE volume:1.8
+
+nova_particle:
+    type: task
+    speed: instant
+    definitions: loc
+    script:
+        - define particle spell
+        - define width 5
+        - define Density 5
+        - define fineness 20
+        - define lengthdensity 5
+        - define effectlist <list[]>
+        - repeat <element[360].div[<[density]>]>:
+            - define Angle <location[0,0,<[width]>].rotate_around_y[<[value].to_radians.mul[<[Density]>]>]>
+            - define effectlist:->:<[loc].points_between[<[Loc].add[<[Angle]>]>].distance[<[lengthdensity]>].exclude[<[loc]>].separated_by[|]>
+        - repeat 5:
+            - playeffect effect:<[particle]> at:<[effectlist]> quantity:1 offset:0 visibility:35
+            - wait 1s
+
+ice_nova_damage:
+    type: task
+    speed: instant
+    definitions: target
+    script:
+        - define icenovabasedmg <player.flag[icenovalevel].mul[5].add[5]>
+        - define intscaling <proc[total_int].div[10]>
+        - define playermdmg <proc[final_mdmg].div[2]>
+        - define icenovafinaldmg <[icenovabasedmg].add[<[intscaling]>].add[<[playermdmg]>].round_down>
+        - choose <proc[target_check].context[<[target]>]>:
+                - case mythicmob:
+                    - define combined <[target].flag[pdef].add[<[icenovafinaldmg]>]>
+                    - define defreduc <[icenovafinaldmg].div[<[combined]>]>
+                    - define final <[icenovafinaldmg].mul[<[defreduc]>]>
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[final]> source:<player>
+                - case enemyplayer:
+                    - define combined <[target].flag[final_pdef].add[<[icenovafinaldmg]>]>
+                    - define defreduc <[icenovafinaldmg].div[<[combined]>]>
+                    - define final <[icenovafinaldmg].mul[<[defreduc]>]>
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[final]> source:<player>
+                - case regularmob:
+                    - adjust <[target]> no_damage_duration:1t
+                    - hurt <[target]> <[icenovafinaldmg]> source:<player>
+
+ice_nova_slow:
+    type: task
+    speed: instant
+    definitions: target
+    script:
+    - choose <proc[target_check].context[<[target]>]>:
+        - case mythicmob:
+            - adjust <[target]> Speed:0.1
+            - wait 5s
+            - adjust <[target]> Speed:0.2
+        - case enemyplayer:
+            - adjust <[target]> walk_Speed:0.1
+            - wait 5s
+            - adjust <[target]> walk_Speed:0.2
+        - case regularmob:
+            - adjust <[target]> Speed:0.1
+            - wait 5s
+            - adjust <[target]> Speed:0.2

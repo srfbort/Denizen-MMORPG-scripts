@@ -1,0 +1,31 @@
+raging_spirit_listing:
+    type: item
+    lv: 1
+    skillpointlv: 10
+    levelflag: ragingspiritlevel
+    skillpointmax: 6
+    spelltype: shield
+    spell: raging_spirit
+    material: shield
+    mechanisms:
+        unbreakable: true
+    display name: Raging Spirit
+    lore:
+    - Unleash your rage, physical damage barely fazes you.
+    enchantments:
+    - knockback:2
+    hide:
+    - enchantments
+
+
+raging_spirit:
+    type: task
+    script:
+    - ratelimit <player> 120s
+    - if !<player.has_flag[raging_spirit_level]>:
+      - flag player raging_spirit_level:1
+    - define buff 10
+    - narrate "temp_pdef increased by <[buff].mul[<player.flag[raging_spirit_level]>]>"
+    - flag player temp_pdef:+:<[buff].mul[<player.flag[raging_spirit_level]>]>
+    - wait 119s
+    - flag player temp_pdef:-:<[buff].mul[<player.flag[raging_spirit_level]>]>

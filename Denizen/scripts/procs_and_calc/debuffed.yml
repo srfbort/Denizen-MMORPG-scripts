@@ -1,0 +1,7 @@
+debuffed:
+  type: procedure
+  script:
+    - if <player.flag[pdef_debuff]> > 0 || <player.flag[mdef_debuff]> > 0 || <player.flag[pdmg_debuff]> > 0 || <player.flag[mdmg_debuff]> > 0:
+      - determine true
+    - else:
+      - determine false

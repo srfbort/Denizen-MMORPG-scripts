@@ -1,0 +1,71 @@
+Tier_One_Stats:
+    type: procedure
+    script:
+    - define diceroll <util.random.int[0].to[1000]>
+    - if <[diceroll]> <= 650:
+        - determine <util.random.int[1].to[4]>
+    - else if <[diceroll]> <= 800:
+        - determine <util.random.int[4].to[5]>
+    - else if <[diceroll]> <= 900:
+        - determine <util.random.int[6].to[10]>
+    - else if <[diceroll]> <= 975:
+        - determine <util.random.int[11].to[12]>
+    - else if <[diceroll]> <= 1000:
+        - determine <util.random.int[13].to[15]>
+        
+        
+grade_one_stats_amount:
+    type: procedure
+    script:
+    - define diceroll <util.random.int[0].to[1000]>
+    - if <[diceroll]> <= 450:
+        - determine 1
+    - else if <[diceroll]> <= 750:
+        - determine 2
+    - else if <[diceroll]> <= 950:
+        - determine 3
+    - else if <[diceroll]> <= 1000:
+        - determine 4
+        
+        
+random_t1_bonus_stat:
+    type: procedure
+    script:
+    - determine <list[bonus_endurance<&co><proc[tier_one_stats]>|bonus_strength<&co><proc[tier_one_stats]>|bonus_dexterity<&co><proc[tier_one_stats]>|bonus_intelligence<&co><proc[tier_one_stats]>|bonus_spirit<&co><proc[tier_one_stats]>].get[<util.random.int[1].to[5]>]>
+        
+grade_two_stats:
+    type: procedure
+    script:
+    - choose <proc[grade_one_stats_amount]>:
+        - case 1:
+            - determine <proc[random_t1_bonus_stat]>
+        - case 2:
+            - determine <list[<proc[random_t1_bonus_stat]>|<proc[random_t1_bonus_stat]>]>
+        - case 3:
+            - determine <list[<proc[random_t1_bonus_stat]>|<proc[random_t1_bonus_stat]>|<proc[random_t1_bonus_stat]>]>
+        - case 4:
+            - determine <list[<proc[random_t1_bonus_stat]>|<proc[random_t1_bonus_stat]>|<proc[random_t1_bonus_stat]>|<proc[random_t1_bonus_stat]>]>
+            
+upgrade_chance:
+    type: procedure
+    script:
+    - define upgradelvl <item[<player.flag[itemtoupgrade]>].nbt[upgradelvl]>
+    - define diceroll <util.random.int[0].to[1000]>
+    - announce <[diceroll]><&sp><player.flag[upg_success_bonus]>
+    - choose <item[<player.flag[itemtoupgrade]>].script.yaml_key[upgradetier]>:
+        - case 1:
+            - if <[upgradelvl]> < 5:
+                - if <[diceroll].add[<player.flag[upg_success_bonus]>]> >= 250:
+                    - determine true
+                - else:
+                    - determine false
+            - else if <[upgradelvl].add[<player.flag[upg_success_bonus]>]> < 7:
+                - if <[diceroll]> >= 450:
+                    - determine true
+                - else:
+                    - determine false
+            - else if <[upgradelvl]> < 9:
+                - if <[diceroll].add[<player.flag[upg_success_bonus]>]> >= 650:
+                    - determine true
+                - else:
+                    - determine false

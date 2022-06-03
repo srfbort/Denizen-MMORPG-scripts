@@ -1,0 +1,197 @@
+equip_menu_stat_visual:
+    type: item
+    material: red_stained_glass_pane
+    display name: Total Stats
+
+
+
+equip_menu2: 
+    type: inventory
+    inventory: chest
+    title: Equipment 
+    size: 54 
+    itemslot: 
+        13: ear1 
+        14: helmet 
+        15: ear2 
+        22: righthand 
+        23: chest 
+        24: lefthand 
+        31: ring1 
+        32: legs 
+        33: ring2 
+        41: boots 
+    slotnumber: 
+        ear1: 13 
+        helmet: 14 
+        ear2: 15 
+        righthand: 22 
+        chest: 23 
+        lefthand: 24 
+        ring1: 31 
+        legs: 32 
+        ring2: 33 
+        boots: 41 
+         
+    slots: 
+    - "[black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [equip_menu_stat_visual] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane]" 
+    - "[black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [<player.flag[ear1]>] [<player.flag[helmet]>] [<player.flag[ear2]>] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane]" 
+    - "[black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [<player.flag[righthand]>] [<player.flag[chest]>] [<player.flag[lefthand]>] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane]" 
+    - "[black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [<player.flag[ring1]>] [<player.flag[legs]>] [<player.flag[ring2]>] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane]" 
+    - "[black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [<player.flag[boots]>] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane]" 
+    - "[black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane] [black_stained_glass_pane]"
+    
+equip_menu2_handler:
+    type: world
+    events:
+        after player clicks in equip_menu2:
+        - sidebar set title:Stats Values:Mdmg:<&sp><proc[final_mdmg].round_to[1]>|Mdef:<&sp><proc[final_mdef].round_to[1]>|Pdmg:<&sp><proc[final_pdmg].round_to[1]>|Pdef:<&sp><proc[final_pdef].round_to[1]>|Crit<&sp>Chance:<&sp><proc[total_crit].round_to[2]>
+        after player opens equip_menu2:
+        - sidebar set title:Stats Values:Mdmg:<&sp><proc[final_mdmg].round_to[1]>|Mdef:<&sp><proc[final_mdef].round_to[1]>|Pdmg:<&sp><proc[final_pdmg].round_to[1]>|Pdef:<&sp><proc[final_pdef].round_to[1]>|Crit<&sp>Chance:<&sp><proc[total_crit].round_to[2]>
+        
+        on player closes inventory:
+        - if <player.flag[equip_menu2_pickeditemid]> != reset && <item[<player.flag[equip_menu2_pickeditemid]>]> == <player.item_on_cursor.script.name>:
+            - flag player equip_menu2_pickeditemid:reset
+            - flag player equipmenu2_cursorstate:placed
+            - narrate "Drop dupe stopped"
+        - else:
+            - if <player.flag[equip_menu2_pickeditemid]> != reset && <player.item_on_cursor.material> == m@air:
+                - narrate "there is an unfinished action in the equipment menu"
+                - wait 5t
+                - narrate <player.item_on_cursor.material>
+                - execute as_player eq
+            
+        on player clicks in inventory:
+        - narrate <context.slot>
+        - if <context.clicked_inventory> == <player.inventory> && <player.flag[equip_menu2_pickeditemid]> != reset && <player.open_inventory> == <player.inventory>:
+            - narrate "there is an unfinished action in the equipment menu"
+            - inventory open d:<player.uuid>_<player.flag[class]>_equipmentinv                    
+                    
+        - if <player.open_inventory> == in@<player.uuid>_<player.flag[class]>_equipmentinv:
+            - if <context.action> == drop_all_cursor:
+                - flag player equip_menu2_pickeditemid:reset
+                - flag player equipmenu2_cursorstate:placed
+            - if <context.clicked_inventory> == <player.inventory>:
+                - if <context.click> == left && ( <context.item.script.yaml_key[itemtype]> == equipment || <context.item.material.name> == air ):
+                    - if <context.action> == drop_all_cursor:
+                        - narrate "dropped"
+                        
+                        - determine cancelled
+                    - if <context.action> == pickup_all:
+                        - if <context.item.nbt[itemid]> == <item[<player.flag[equip_menu2_pickeditemid]>].nbt[itemid]> || <player.flag[equip_menu2_pickeditemid]> == reset:
+                            - flag player equip_menu2_pickeditemid:<context.item>
+                            - flag player equipmenu2_cursorstate:picked
+                            - flag player equipmenu2_pickedfrom:<context.clicked_inventory>
+                            - flag player equipmenu2_pickedslot:<context.slot>
+                            - narrate "picked"
+                        - else:
+                            - if <player.open_inventory.contains[<item[<player.flag[equip_menu2_pickeditemid]>]>]>:
+                                - narrate <player.open_inventory.find[<item[<player.flag[equip_menu2_pickeditemid]>]>]>
+                                - take slot:<player.open_inventory.find[<item[<player.flag[equip_menu2_pickeditemid]>]>]> quantity:1 from:<player.open_inventory>
+                            - else if <player.inventory.contains[<item[<player.flag[equip_menu2_pickeditemid]>]>]>:
+                                - take slot:<player.inventory.find[<item[<player.flag[equip_menu2_pickeditemid]>]>]> quantity:1 from:<player.inventory>
+                            - give <item[<player.flag[equip_menu2_pickeditemid]>]> to:<player.flag[equipmenu2_pickedfrom]> slot:<player.flag[equipmenu2_pickedslot]>
+                            - flag player equip_menu2_pickeditemid:reset
+                            - flag player equipmenu2_cursorstate:placed
+                            - determine cancelled
+                    - if <context.action> == place_all:
+                        - flag player equip_menu2_pickeditemid:reset
+                        - if <item[<player.flag[<context.cursor_item.script.yaml_key[slot]>]>]> == <context.cursor_item>:
+                            - if <list[<context.cursor_item.script.yaml_key[freestats]>].size||0> > 0:
+                                - foreach <context.cursor_item.script.yaml_key[freestats]>:
+                                    - flag player bonus_<[value].before[/]>:-:<[value].after[/]>
+                                    - narrate "<[value].before[/]> decreased by <[value].after[/]>"
+                            - if <context.cursor_item.script.yaml_key[randomstats]> == true:
+                                - foreach <yaml[<context.cursor_item.script.name>_nbt_data].read[<context.cursor_item.nbt[itemid]>]>:
+                                    - flag player <[value].before[<&co>]>:-:<[value].after[<&co>]>
+                                    - narrate "<[value].before[<&co>]> decreased by <[value].after[<&co>]>"
+                            - else:
+                                - narrate "No random stats"
+                            - flag player <context.cursor_item.script.yaml_key[slot]>:air
+                            - foreach <context.cursor_item.script.yaml_key[basestats]>:
+                                - flag player bonus_<[value]>:-:<context.cursor_item.nbt[<[value]>]>
+                                - narrate "<[value]> decreased by <context.cursor_item.nbt[<[value]>]>"
+                            - flag player <context.cursor_item.script.yaml_key[slot]>:<item[air]>
+                            - flag <player> max_health:<proc[max_hp]>
+                            - adjust <player> max_health:<proc[max_hp].round>
+                            - flag <player> max_mana:<proc[max_mp]>
+                            - adjust <player> max_mana:<proc[max_mp].round>
+                        - else:
+                            - narrate "PROBLEM AVOIDED"
+                    - if <context.action> == swap_with_cursor:
+                        - determine cancelled
+                - else:
+                    - determine cancelled
+        - if <context.clicked_inventory> == in@<player.uuid>_<player.flag[class]>_equipmentinv:
+            - if <context.click> == left && ( <context.item.script.yaml_key[itemtype]> == equipment || <context.item.material.name> == air ):
+                - if <context.action> == drop_all_cursor:
+                    - flag player equip_menu2_pickeditemid:reset
+                    - flag player equipmenu2_cursorstate:placed
+                    - determine cancelled
+                - if <context.action> == pickup_all:
+                    - if <context.item.nbt[itemid]> == <item[<player.flag[equip_menu2_pickeditemid]>].nbt[itemid]> || <player.flag[equip_menu2_pickeditemid]> == reset:
+                        - flag player equip_menu2_pickeditemid:<context.item>
+                        - flag player equipmenu2_cursorstate:picked
+                        - flag player equipmenu2_pickedfrom:<context.clicked_inventory>
+                        - flag player equipmenu2_pickedslot:<context.slot>
+                        - narrate "picked"
+                    - else:
+                        - if <player.open_inventory.contains[<item[<player.flag[equip_menu2_pickeditemid]>]>]>:
+                            - narrate <player.open_inventory.find[<item[<player.flag[equip_menu2_pickeditemid]>]>]>
+                            - take slot:<player.open_inventory.find[<item[<player.flag[equip_menu2_pickeditemid]>]>]> quantity:1 from:<player.open_inventory>
+                        - else if <player.inventory.contains[<item[<player.flag[equip_menu2_pickeditemid]>]>]>:
+                            - take slot:<player.inventory.find[<item[<player.flag[equip_menu2_pickeditemid]>]>]> quantity:1 from:<player.inventory>
+                        - give <item[<player.flag[equip_menu2_pickeditemid]>]> to:<player.flag[equipmenu2_pickedfrom]> slot:<player.flag[equipmenu2_pickedslot]>
+                        - flag player equip_menu2_pickeditemid:reset
+                        - flag player equipmenu2_cursorstate:placed
+                        - determine cancelled
+                - if <context.action> == place_all:
+                    - flag player equip_menu2_pickeditemid:reset
+                    - narrate "<context.cursor_item.script.yaml_key[lv].round_down>"
+                    - if <item[<player.flag[<context.cursor_item.script.yaml_key[slot]>]>]> != <context.cursor_item>:
+                        - if ( <context.cursor_item.script.yaml_key[slot]> == <script[equip_menu2].yaml_key[itemslot.<context.slot>]> ) || ( <context.cursor_item.script.yaml_key[slot]> == ring && <script[equip_menu2].yaml_key[itemslot.<context.slot>].contains_any[ring]> ) || ( <context.cursor_item.script.yaml_key[slot]> == ear && <script[equip_menu2].yaml_key[itemslot.<context.slot>].contains_any[ear]> ):
+                            - if <player.flag[level].round_down> >= <context.cursor_item.script.yaml_key[lv].round_down>:
+                                - if <list[<context.cursor_item.script.yaml_key[freestats]>].size||0> > 0:
+                                    - foreach <context.cursor_item.script.yaml_key[freestats]>:
+                                        - flag player bonus_<[value].before[/]>:+:<[value].after[/]>
+                                        - narrate "<[value].before[/]> increased by <[value].after[/]>"
+                                - if <context.cursor_item.script.yaml_key[randomstats]> == true:
+                                    - narrate <yaml[<context.cursor_item.script.name>_nbt_data].read[<context.cursor_item.nbt[itemid]>]>
+                                    - foreach <yaml[<context.cursor_item.script.name>_nbt_data].read[<context.cursor_item.nbt[itemid]>]>:
+                                        - flag player <[value].before[<&co>]>:+:<[value].after[<&co>]>
+                                        - narrate "<[value].before[<&co>]> increased by <[value].after[<&co>]>"
+                                - else:
+                                    - narrate "No random stats"
+                                - flag player <context.cursor_item.script.yaml_key[slot]>:<context.cursor_item>
+                                - foreach <context.cursor_item.script.yaml_key[basestats]>:
+                                    - flag player bonus_<[value]>:+:<context.cursor_item.nbt[<[value]>]>
+                                    - narrate "<[value]> increased by <context.cursor_item.nbt[<[value]>]>"
+                                - flag player <context.cursor_item.script.yaml_key[slot]>:<context.cursor_item>
+                                - flag <player> max_health:<proc[max_hp].round>
+                                - adjust <player> max_health:<proc[max_hp].round>
+                                - flag <player> max_mana:<proc[max_mp].round>
+                            - adjust <player> max_mana:<proc[max_mp].round>
+                            - else:
+                                - narrate "Your level is too low to use this item."
+                                - determine cancelled
+                        - else:
+                            - narrate "item doesnt fit here"
+                            - determine cancelled
+                    - else:
+                        - narrate "item was already here"
+                    - narrate "placed"
+                - if <context.action> == swap_with_cursor:
+                    - determine cancelled
+            - else:
+                - determine cancelled
+            
+helmetslotholder:
+    type: item
+    material: chainmail_helmet
+    mechanisms:
+        unbreakable: true
+        hides: lore
+    Display name: Equipment
+    lore:
+    - Opens equipment menu.
+                

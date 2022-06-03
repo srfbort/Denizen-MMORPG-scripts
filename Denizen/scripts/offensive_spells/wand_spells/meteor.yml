@@ -1,0 +1,94 @@
+meteor_listing:
+    type: item
+    lv: 20
+    skillpointlv: 15
+    levelflag: meteorlevel
+    skillpointmax: 6
+    spelltype: wand
+    spell: meteor
+    material: book
+    mechanisms:
+        unbreakable: true
+    display name: Meteor
+    lore:
+    - Rip a meteor from the heavens and send it crashing down onto your enemies.
+    enchantments:
+    - knockback:2
+
+meteor:
+    type: task
+    script:
+    - if !<player.has_flag[meteorlevel]>:
+        - flag player meteorlevel:1
+    - playsound <player.location.cursor_on[5]> sound:BLOCK_CAMPFIRE_CRACKLE
+    - playsound <player.location.cursor_on[5]> sound:BLOCK_FIRE_AMBIENT
+    - define last <player.eye_location.forward[1].points_between[<player.location.cursor_on[25].ignore[grass|tall_grass|air]>].last>
+    - define foreachskip 0
+    - foreach <player.eye_location.forward[1].points_between[<player.location.cursor_on[25].ignore[grass|tall_grass|air]>]>:
+        - playeffect effect:flame at:<[value]> quantity:5 offset:0 visibility:35
+        - define foreachskip:+:1
+        - if <[foreachskip].round_down.mod[2]> != 0:
+            - wait 1t
+        - playeffect effect:lava at:<[value]> quantity:5 offset:0 visibility:35
+    - define falldown <[last]>
+    - while <[falldown].material.name> == air:
+        - define falldown <[falldown].with_y[<[falldown].y.sub[1]>]>
+        - playeffect effect:bubble_pop at:<[falldown]> quantity:5 offset:0 visibility:35
+    - define last <[falldown]>
+    - define loc <[last].with_y[<[last].y.add[1]>]>
+    - run meteor_particle def:<[loc]>
+    - wait 3s
+    - playeffect effect:explosion_large at:<[last].with_y[<[last].y.add[1]>]> quantity:10 offset:2,0,2 visibility:35
+    - playsound <[last]> sound:ENTITY_GENERIC_EXPLODE volume:1.8
+    - if <[last].find.living_entities.within[5].exclude[<player>].size> > 0:
+        - foreach <[last].find.living_entities.within[5].exclude[<player>]>:
+            - define target <[value]>
+            - run meteor_damage def:<[target]>
+
+meteor_particle:
+    type: task
+    speed: instant
+    definitions: loc
+    script:
+        - define particle flame
+        - define width 5
+        - define Density 5
+        - define fineness 20
+        - define lengthdensity 5
+        - define effectlist <list[]>
+        - repeat <element[360].div[<[density]>]>:
+            - define Angle <location[0,0,<[width]>].rotate_around_y[<[value].to_radians.mul[<[Density]>]>]>
+            - define effectlist:->:<[loc].points_between[<[Loc].add[<[Angle]>]>].distance[<[lengthdensity]>].exclude[<[loc]>].separated_by[|]>
+        - repeat 4:
+            - playeffect effect:<[particle]> at:<[effectlist]> quantity:1 offset:0 visibility:35
+            - wait 1s
+
+meteor_damage:
+    type: task
+    speed: instant
+    definitions: target
+    script:
+        - define meteorbasedmg <player.flag[meteorlevel].mul[5].add[5]>
+        - define intscaling <proc[total_int].div[5]>
+        - define playermdmg <proc[final_mdmg].div[1.5]>
+        - define meteorfinaldmg <[meteorbasedmg].add[<[intscaling]>].add[<[playermdmg]>].round_down>
+        - choose <proc[target_check].context[<[target]>]>:
+            - case mythicmob:
+                - define combined <[target].flag[mdef].add[<[meteorfinaldmg]>]>
+                - define defreduc <[meteorfinaldmg].div[<[combined]>]>
+                - define final <[meteorfinaldmg].mul[<[defreduc]>]>
+                - adjust <[target]> no_damage_duration:1t
+                - hurt <[target]> <[final].round_to[0]> source:<player>
+            - case enemyplayer:
+                - narrate enemy
+                - define combined <[target].flag[final_mdef].add[<[meteorfinaldmg]>]>
+                - define defreduc <[meteorfinaldmg].div[<[combined]>]>
+                - define final <[meteorfinaldmg].mul[<[defreduc]>]>
+                - adjust <[target]> no_damage_duration:1t
+                - hurt <[target]> <[final].round_to[0]> source:<player>
+            - case regularmob:
+                - narrate regular
+                - adjust <[target]> no_damage_duration:1t
+                - hurt <[target]> <[meteorfinaldmg]> source:<player>
+            - case friendlyplayer:
+                - narrate friendly

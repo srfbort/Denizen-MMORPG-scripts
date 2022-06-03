@@ -1,0 +1,338 @@
+player_pickup_item_events:
+    type: world
+    events:
+        after player picks up item:
+        - if <context.item.script.yaml_key[randomstats]> == true:
+            - if <server.has_file[unique_item_data/<context.item.script.name>_nbt_data.yml]>:
+                - if !<yaml[<context.item.script.name>_nbt_data].contains[<context.item.nbt[itemid]>]>:
+                    - yaml "load:unique_item_data/<context.item.script.name>_nbt_data.yml" id:<context.item.script.name>_nbt_data
+                    - yaml id:<context.item.script.name>_nbt_data set <context.item.nbt[itemid]>:|:<proc[grade_<context.item.script.yaml_key[grade]>_stats]>
+                    - yaml "savefile:unique_item_data/<context.item.script.name>_nbt_data.yml" id:<context.item.script.name>_nbt_data
+                    - inventory adjust slot:<player.inventory.find[<context.item>]> lore:<&4><context.item.script.yaml_key[lore].separated_by[|<context.item.nbt[lorecolor]>]>|<&7>pdmg<&co><&sp><context.item.nbt[pdmg]><&sp><&chr[00a6]><&sp>mdmg:<&sp><context.item.nbt[mdmg]><&sp><&chr[00a6]><&sp><&7>pdef<&co><&sp><context.item.nbt[pdef]><&sp><&chr[00a6]><&sp>mdef:<&sp><context.item.nbt[mdef]><&sp><&chr[00a6]><&sp>crit:<&sp><context.item.nbt[crit]>|<context.item.nbt[lorecolor]><yaml[<context.item.script.name>_nbt_data].read[<context.item.nbt[itemid]>].parse[after[bonus_].to_uppercase].separated_by[|<context.item.nbt[lorecolor]>]>
+                - else:
+                    - narrate "This item has stats!"
+                    - narrate <player.inventory.find[<context.item>]>
+            - else:
+                - yaml create id:<context.item.script.name>_nbt_data
+                - yaml "load:unique_item_data/<context.item.script.name>_nbt_data.yml" id:<context.item.script.name>_nbt_data
+                - yaml id:<context.item.script.name>_nbt_data set <context.item.nbt[itemid]>:|:<proc[grade_<context.item.script.yaml_key[grade]>_stats]>
+                - yaml "savefile:unique_item_data/<context.item.script.name>_nbt_data.yml" id:<context.item.script.name>_nbt_data
+                - inventory adjust slot:<player.inventory.find[<context.item>]> lore:<&4><context.item.script.yaml_key[lore].separated_by[|<context.item.nbt[lorecolor]>]>|<&7>pdmg<&co><&sp><context.item.nbt[pdmg]><&sp><&chr[00a6]><&sp>mdmg:<&sp><context.item.nbt[mdmg]><&sp><&chr[00a6]><&sp><&7>pdef<&co><&sp><context.item.nbt[pdef]><&sp><&chr[00a6]><&sp>mdef:<&sp><context.item.nbt[mdef]><&sp><&chr[00a6]><&sp>crit:<&sp><context.item.nbt[crit]>|<context.item.nbt[lorecolor]><yaml[<context.item.script.name>_nbt_data].read[<context.item.nbt[itemid]>].parse[after[bonus_].to_uppercase].separated_by[|<context.item.nbt[lorecolor]>]>
+                - narrate "new item added to yaml files"
+                - flag server unique_item_yamls:->:<context.item.script.name>_nbt_data
+        - else:
+            - narrate "That item dont get no stuffs"
+
+Chest:
+    type: item
+    material: leather_chestplate
+    mechanisms:
+        nbt:
+            - itemid/<util.random.uuid>
+            - lorecolor/<&f>
+            - statcolor/<&f>
+            - mdef/1
+            - pdef/2
+            - mdmg/0
+            - pdmg/0
+            - crit/0
+            - upgradelvl/0
+    display name: <&e>Leather Breastplate of the Impoverished
+    slot: chest
+    itemtype: equipment
+    grade: two
+    basestats: mdef|pdef|crit
+    upgradeable: true
+    mdefup: .449
+    pdefup: .559
+    critup: .278
+    maxupgrade: 9
+    upgradetier: 1
+    lv: 5
+    randomstats: true
+    lore:
+    - Level&co&sp5
+    - Masterfully Crafted leather breastplate. Seems to have unidentified magical power.
+
+Boots:
+    type: item
+    material: leather_boots
+    mechanisms:
+        nbt:
+            - itemid/<util.random.uuid>
+            - lorecolor/<&f>
+            - statcolor/<&f>
+            - mdef/1
+            - pdef/2
+            - mdmg/0
+            - pdmg/0
+            - crit/0
+            - upgradelvl/0
+    display name: <&e>Leather Boots of the Impoverished
+    slot: boots
+    itemtype: equipment
+    grade: two
+    basestats: mdef|pdef|crit
+    upgradeable: true
+    mdefup: .449
+    pdefup: .559
+    critup: .278
+    maxupgrade: 9
+    upgradetier: 1
+    lv: 5
+    randomstats: true
+    lore:
+    - Level&co&sp5
+    - Masterfully Crafted leather boots. Seems to have unidentified magical power.
+    
+Crown:
+    type: item
+    material: leather_helmet
+    mechanisms:
+        nbt:
+            - itemid/<util.random.uuid>
+            - lorecolor/<&f>
+            - statcolor/<&f>
+            - mdef/1
+            - pdef/2
+            - mdmg/0
+            - pdmg/0
+            - crit/0
+            - upgradelvl/0
+    display name: <&e>Crown of the Impoverished
+    slot: helmet
+    itemtype: equipment
+    grade: two
+    basestats: mdef|pdef|crit
+    upgradeable: true
+    mdefup: .449
+    pdefup: .559
+    critup: .278
+    maxupgrade: 9
+    upgradetier: 1
+    lv: 5
+    randomstats: true
+    lore:
+    - Level&co&sp5
+    - Masterfully Crafted leather hat. Seems to have unidentified magical power.
+
+legs:
+    type: item
+    material: leather_leggings
+    mechanisms:
+        nbt:
+            - itemid/<util.random.uuid>
+            - lorecolor/<&f>
+            - statcolor/<&f>
+            - mdef/1
+            - pdef/2
+            - mdmg/0
+            - pdmg/0
+            - crit/0
+            - upgradelvl/0
+    display name: <&e>Leather Chaps of the Impoverished
+    slot: legs
+    itemtype: equipment
+    grade: two
+    basestats: mdef|pdef|crit
+    upgradeable: true
+    mdefup: .449
+    pdefup: .559
+    critup: .278
+    maxupgrade: 9
+    upgradetier: 1
+    lv: 5
+    randomstats: true
+    lore:
+    - Level&co&sp5
+    - Masterfully Crafted leather chaps. Seems to have unidentified magical power.
+    
+Oak_Wand:
+    type: item
+    material: stick
+    mechanisms:
+        nbt:
+            - itemid/<util.random.uuid>
+            - lorecolor/<&f>
+            - statcolor/<&f>
+            - mdef/1
+            - pdef/0
+            - mdmg/0
+            - pdmg/0
+            - crit/2.5
+            - upgradelvl/0
+    display name: <&e>Enchanted Wand of Oak
+    slot: righthand
+    itemtype: equipment
+    grade: two
+    basestats: mdmg|crit|mdef
+    upgradeable: true
+    mdmgup: 1
+    mdefup: .5
+    critup: .5
+    maxupgrade: 9
+    upgradetier: 1
+    lv: 5
+    randomstats: true
+    lore:
+    - Level&co&sp5
+    - Beautifully crafted wand. Posesses great power.
+    
+ring:
+    type: item
+    material: end_Crystal
+    mechanisms:
+        nbt:
+            - itemid/<util.random.uuid>
+            - lorecolor/<&f>
+            - statcolor/<&f>
+            - mdef/1
+            - pdef/0
+            - mdmg/0
+            - pdmg/0
+            - crit/2.5
+            - upgradelvl/0
+    display name: <&e>Enchanted Ring of Stuff
+    slot: ring
+    itemtype: equipment
+    grade: two
+    basestats: mdmg|crit|mdef
+    upgradeable: true
+    mdmgup: 1
+    mdefup: .5
+    critup: .5
+    maxupgrade: 9
+    upgradetier: 1
+    lv: 5
+    randomstats: true
+    lore:
+    - Level&co&sp5
+    - Masterfully crafted ring. Posesses great power.
+    
+earring:
+    type: item
+    material: end_Crystal
+    mechanisms:
+        nbt:
+            - itemid/<util.random.uuid>
+            - lorecolor/<&f>
+            - statcolor/<&f>
+            - mdef/1
+            - pdef/0
+            - mdmg/0
+            - pdmg/0
+            - crit/2.5
+            - upgradelvl/0
+    display name: <&e>Enchanted Earring of Stuff
+    slot: ear
+    itemtype: equipment
+    grade: two
+    basestats: mdmg|crit|mdef
+    upgradeable: true
+    mdmgup: 1
+    mdefup: .5
+    critup: .5
+    maxupgrade: 9
+    upgradetier: 1
+    lv: 5
+    randomstats: true
+    lore:
+    - Level&co&sp5
+    - Masterfully crafted earring. Posesses great power.
+
+Bow1:
+    type: item
+    material: bow
+    mechanisms:
+        nbt:
+            - itemid/<util.random.uuid>
+            - lorecolor/<&f>
+            - statcolor/<&f>
+            - mdef/1
+            - pdef/2
+            - mdmg/0
+            - pdmg/10
+            - crit/0
+            - upgradelvl/0
+    display name: <&e>Good Bow
+    slot: righthand
+    itemtype: equipment
+    grade: two
+    basestats: pdmg|mdef|pdef|crit
+    freestats: dexterity/50|strength/25
+    upgradeable: true
+    pdmgup: .5
+    mdefup: .449
+    pdefup: .559
+    critup: .278
+    maxupgrade: 9
+    upgradetier: 1
+    lv: 5
+    randomstats: true
+    lore:
+    - Level&co&sp5
+    - Masterfully Crafted leather breastplate. Seems to have unidentified magical power.
+
+op_Chest:
+    type: item
+    material: leather_chestplate
+    mechanisms:
+        nbt:
+            - itemid/<util.random.uuid>
+            - lorecolor/<&f>
+            - statcolor/<&f>
+            - mdef/20
+            - pdef/20
+            - mdmg/0
+            - pdmg/5
+            - crit/0
+            - upgradelvl/0
+    display name: <&e>Leather Breastplate of the Impoverished
+    slot: chest
+    itemtype: equipment
+    grade: two
+    basestats: mdef|pdef|crit|pdmg
+    freestats: 
+    upgradeable: true
+    mdefup: .449
+    pdefup: .559
+    critup: .278
+    maxupgrade: 9
+    upgradetier: 1
+    lv: 50
+    randomstats: true
+    lore:
+    - Level&co&sp5
+    - Masterfully Crafted leather breastplate. Seems to have unidentified magical power.
+
+op_wand:
+    type: item
+    material: stick
+    mechanisms:
+        nbt:
+            - itemid/<util.random.uuid>
+            - lorecolor/<&f>
+            - statcolor/<&f>
+            - mdef/20
+            - pdef/20
+            - mdmg/30
+            - pdmg/5
+            - crit/0
+            - upgradelvl/0
+    display name: <&e>Good God..
+    slot: righthand
+    itemtype: equipment
+    grade: two
+    basestats: mdef|pdef|crit|pdmg|mdmg
+    freestats: 
+    upgradeable: true
+    mdefup: .449
+    pdefup: .559
+    critup: .278
+    maxupgrade: 9
+    upgradetier: 1
+    lv: 50
+    randomstats: true
+    lore:
+    - Level&co&sp5
+    - Masterfully Crafted leather breastplate. Seems to have unidentified magical power.
